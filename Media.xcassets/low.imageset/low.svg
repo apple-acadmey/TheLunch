@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="115px" height="115px" viewBox="0 0 115 115" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>Group 8</title>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Group">
+            <rect id="Rectangle-6" fill="#55ADFF" x="0" y="49" width="115" height="66" rx="15"></rect>
+            <circle id="Oval" fill="#55ADFF" cx="57.5" cy="57.5" r="57.5"></circle>
+            <rect id="Rectangle-7" fill="#FFFFFF" x="36" y="57" width="10" height="5"></rect>
+            <line x1="41" y1="62" x2="41" y2="68" id="Line-4" stroke="#FFFFFF" stroke-width="10" fill="#FFFFFF" stroke-linecap="round" stroke-linejoin="bevel"></line>
+            <path d="M30.5,48.5 C31.3997839,54.7386873 34.8997839,57.8580309 41,57.8580309 C47.1002161,57.8580309 50.6002161,54.7386873 51.5,48.5" id="Line" stroke="#000000" stroke-width="4" stroke-linecap="round"></path>
+            <path d="M62.5,48.5 C63.3997839,54.7386873 66.8997839,57.8580309 73,57.8580309 C79.1002161,57.8580309 82.6002161,54.7386873 83.5,48.5" id="Line-3" stroke="#000000" stroke-width="4" stroke-linecap="round"></path>
+            <path d="M62.5,48.5 C63.3997839,54.7386873 66.8997839,57.8580309 73,57.8580309 C79.1002161,57.8580309 82.6002161,54.7386873 83.5,48.5" id="Line-5" stroke="#000000" stroke-width="4" stroke-linecap="round" transform="translate(73, 53.179) rotate(-1) translate(-73, -53.179)"></path>
+        </g>
+    </g>
+</svg>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="107px" height="114px" viewBox="0 0 107 114" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>Group 9</title>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Group">
+            <rect id="Rectangle-8" fill="#DB67C1" x="0" y="17.1916325" width="107" height="96" rx="29"></rect>
+            <path d="M45.1410366,59.918691 C45.7837394,64.5853576 48.2837394,66.918691 52.6410366,66.918691 C56.9983338,66.918691 59.4983338,64.5853576 60.1410366,59.918691" id="Line-5" stroke="#000000" stroke-width="4" stroke-linecap="round" transform="translate(52.641, 63.4187) rotate(-1) translate(-52.641, -63.4187)"></path>
+            <path d="M60.1411128,40.9099648 C60.9980499,45.5766314 64.3313832,47.9099648 70.1411128,47.9099648 C75.9508424,47.9099648 79.2841757,45.5766314 80.1411128,40.9099648" id="Line-5" stroke="#000000" stroke-width="4" stroke-linecap="round" transform="translate(70.1411, 44.41) rotate(-1) translate(-70.1411, -44.41)"></path>
+            <path d="M25.1411128,40.9274172 C25.9980499,45.5940838 29.3313832,47.9274172 35.1411128,47.9274172 C40.9508424,47.9274172 44.2841757,45.5940838 45.1411128,40.9274172" id="Line-5" stroke="#000000" stroke-width="4" stroke-linecap="round" transform="translate(35.1411, 44.4274) rotate(-1) translate(-35.1411, -44.4274)"></path>
+            <ellipse id="Oval-3" fill="#DB67C1" cx="52.5273782" cy="17.6203059" rx="19.5091261" ry="17.6203059"></ellipse>
+            <ellipse id="Oval-3" fill="#DB67C1" cx="83.5906785" cy="19.3562797" rx="19.5091261" ry="17.6203059"></ellipse>
+            <ellipse id="Oval-3" fill="#DB67C1" cx="21.5091261" cy="18.6203059" rx="19.5091261" ry="17.6203059"></ellipse>
+        </g>
+    </g>
+</svg>
