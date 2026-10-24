@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="115px" height="115px" viewBox="0 0 115 115" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>Group 2</title>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Group">
+            <ellipse id="Oval-4" fill="#030303" cx="59" cy="35" rx="40" ry="28"></ellipse>
+            <circle id="Oval-3" fill="#7C4AB2" cx="57.5" cy="57.5" r="57.5"></circle>
+            <ellipse id="Oval-9" fill="#7C4AB2" cx="59" cy="29.5" rx="40" ry="29.5"></ellipse>
+            <ellipse id="Oval-6" fill="#FFFFFF" cx="41" cy="33.5" rx="11" ry="14.5"></ellipse>
+            <ellipse id="Oval-8" stroke="#FFF8F8" fill="#FFFFFF" cx="74" cy="33.5" rx="10.5" ry="14"></ellipse>
+            <ellipse id="Oval-7" fill="#000000" cx="43" cy="31" rx="7" ry="8"></ellipse>
+            <ellipse id="Oval-10" fill="#000000" cx="72" cy="31" rx="7" ry="8"></ellipse>
+            <ellipse id="Oval-15" fill="#7C4AB2" cx="41" cy="41.5" rx="11" ry="9.5"></ellipse>
+            <ellipse id="Oval-16" fill="#7C4AB2" cx="74" cy="41.5" rx="11" ry="9.5"></ellipse>
+            <path d="M35.3567728,55.7627648 C48.1910898,43.2914226 66.5877931,41.9747266 79.3567728,54.7079571" id="Path" stroke="#000000" transform="translate(57.3568, 50.7628) scale(1, -1) translate(-57.3568, -50.7628)"></path>
+        </g>
+    </g>
+</svg>

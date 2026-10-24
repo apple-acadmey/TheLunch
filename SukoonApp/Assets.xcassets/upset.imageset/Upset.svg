@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="121px" height="115px" viewBox="0 0 121 115" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>Group</title>
+    <defs>
+        <path d="M0.5,0.5 L44.5,0.5" id="path-1"></path>
+        <filter x="-31.1%" y="-1000.0%" width="162.2%" height="2900.0%" filterUnits="objectBoundingBox" id="filter-2">
+            <feMorphology radius="0.5" operator="dilate" in="SourceAlpha" result="shadowSpreadOuter1"></feMorphology>
+            <feOffset dx="0" dy="4" in="shadowSpreadOuter1" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="4" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feComposite in="shadowBlurOuter1" in2="SourceAlpha" operator="out" result="shadowBlurOuter1"></feComposite>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.25 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+        <path d="M0.5,1.5 L44.5,1.5" id="path-3"></path>
+        <filter x="-33.0%" y="-475.0%" width="165.9%" height="1450.0%" filterUnits="objectBoundingBox" id="filter-4">
+            <feMorphology radius="0.5" operator="dilate" in="SourceAlpha" result="shadowSpreadOuter1"></feMorphology>
+            <feOffset dx="0" dy="4" in="shadowSpreadOuter1" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="4" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feComposite in="shadowBlurOuter1" in2="SourceAlpha" operator="out" result="shadowBlurOuter1"></feComposite>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.25 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Group">
+            <rect id="Rectangle-6" fill="#DE3D3D" x="0" y="0" width="121" height="115" rx="10"></rect>
+            <line x1="35.4444444" y1="34.5" x2="90.5555556" y2="34.5" id="Line" stroke="#979797" stroke-linecap="square"></line>
+            <path d="M51.4173643,34.6591126 C51.8816081,34.6591126 52.11373,34.6591126 52.3099988,34.6652806 C59.0573627,34.877325 64.4173643,40.4084176 64.4173643,47.1591126 C64.4173643,53.9098076 59.0573627,59.4409001 52.3099988,59.6529446 C52.11373,59.6591126 51.8816081,59.6591126 51.4173643,59.6591126 C50.9531205,59.6591126 50.7209986,59.6591126 50.5247298,59.6529446 C43.7773659,59.4409001 38.4173643,53.9098076 38.4173643,47.1591126 C38.4173643,40.4084176 43.7773659,34.877325 50.5247298,34.6652806 C50.7209986,34.6591126 50.9531205,34.6591126 51.4173643,34.6591126 Z" id="Rectangle-7" fill="#F2F3F9"></path>
+            <circle id="Oval-7" fill="#0C0C0D" cx="50.5" cy="47.5" r="4.5"></circle>
+            <path d="M70,35 C70.4642438,35 70.6963657,35 70.8926345,35.006168 C77.6399984,35.2182124 83,40.749305 83,47.5 C83,54.250695 77.6399984,59.7817876 70.8926345,59.993832 C70.6963657,60 70.4642438,60 70,60 C69.5357562,60 69.3036343,60 69.1073655,59.993832 C62.3600016,59.7817876 57,54.250695 57,47.5 C57,40.749305 62.3600016,35.2182124 69.1073655,35.006168 C69.3036343,35 69.5357562,35 70,35 Z" id="Rectangle-7" fill="#F2F3F9"></path>
+            <circle id="Oval-7" fill="#0C0C0D" cx="69.5" cy="47.5" r="4.5"></circle>
+            <ellipse id="Oval-13" fill="#DE3D3D" cx="63.5" cy="37.5" rx="31.5" ry="9.5"></ellipse>
+            <g transform="translate(37.5273, 72)" id="Line-12" stroke-linecap="square">
+                <g>
+                    <use fill="black" fill-opacity="1" filter="url(#filter-2)" xlink:href="#path-1"></use>
+                    <use stroke="#000000" stroke-width="1" fill="#0D0D0D" fill-rule="evenodd" xlink:href="#path-1"></use>
+                </g>
+                <g>
+                    <use fill="black" fill-opacity="1" filter="url(#filter-4)" xlink:href="#path-3"></use>
+                    <use stroke="#000000" stroke-width="1" fill="#0D0D0D" fill-rule="evenodd" xlink:href="#path-3"></use>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
