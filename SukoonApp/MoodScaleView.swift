@@ -52,22 +52,54 @@ struct MoodScaleView: View {
                 .font(.system(size: 28, weight: .semibold))
                 .foregroundStyle(.black.opacity(0.70))
         
+            ZStack {
+                // مراكز الوجوه
+                let points: [CGPoint] = [
+                    CGPoint(x: 40,  y: 40),    // upset
+                    CGPoint(x: 95, y: 120),   // low
+                    CGPoint(x: 180, y: 165),   // unsure
+                    CGPoint(x: 265, y: 120),   // good
+                    CGPoint(x: 320, y: 40)     // great
+                ]
 
-            // الوجوه الصغيرة
-            HStack(spacing: 14) {
+                // الخط: يمر بكل النقاط
+                Path { path in
+                    path.move(to: points[0])
+                    path.addQuadCurve(to: points[2], control: CGPoint(x: 70, y: 170))
+                    path.addQuadCurve(to: points[4], control: CGPoint(x: 290, y: 170))
+                }
+                .stroke(Color("primarycolor").opacity(0.55),
+                        style: StrokeStyle(lineWidth: 5, lineCap: .round))
+
+                // الوجوه
                 ForEach(Array(Mood.allCases.enumerated()), id: \.element) { index, mood in
                     Button {
                         selectedMood = mood
                     } label: {
-                        Image(mood.imageName)
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: 60, height: 60).opacity(selectedMood == mood ? 1.0 : 0.64)//يضلل المو محدده
+                        ZStack {
+                            Image(mood.imageName)
+                                .resizable()
+                                .scaledToFit()
+                                .brightness(1)
+                                .scaleEffect(1.13)
+
+                            Image(mood.imageName)
+                                .resizable()
+                                .scaledToFit()
+                                .opacity(selectedMood == mood ? 1.0 : 0.64)
+                        }
+                        .frame(width: 60, height: 60)
                     }
-                    .offset(y: arcOffset(for: index))
+                    .buttonStyle(.plain)
+                    .position(points[index])
                 }
-                
-            }//HStack
+            }
+            .frame(width: 360, height: 220)
+            .padding(.vertical, 50)
+            .frame(height: 150)
+                        
+        
+            
             
             Spacer()
             
