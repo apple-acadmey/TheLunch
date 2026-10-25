@@ -115,43 +115,48 @@ struct ReflectionPageView: View {
                         .font(.system(size: 17, weight: .medium))
                         .foregroundStyle(.black.opacity(0.60))
                         .frame(width: 40, height: 40)
-                        .background(Color("primarycolor").opacity(0.09))
+                        .background(Color("primarycolor").opacity(0.09))   // ← رجعتها
                         .clipShape(Circle())
                 }
                 .buttonStyle(.plain)
             }
+            .sharedBackgroundVisibility(.hidden)
 
-            // النقاط
+            // الثلاث نقاط
             ToolbarItem(placement: .navigationBarTrailing) {
                 Menu {
-                    // ... عناصر القائمة
+                    Button {
+                        currentQuestion = QuestionProvider.reroll(for: selectedMood, excluding: currentQuestion)
+                    } label: {
+                        Label("Another question", systemImage: "arrow.triangle.2.circlepath")
+                    }
+
+                    Button {
+                        isFavourite.toggle()
+                    } label: {
+                        Label(
+                            isFavourite ? "Remove favourite" : "Add favourite",
+                            systemImage: isFavourite ? "star.fill" : "star"
+                        )
+                    }
+
+                    Button(role: .destructive) {
+                        userReflectionText = ""
+                    } label: {
+                        Label("Delete", systemImage: "trash")
+                    }
+                    .tint(.red)                                            // ← الحذف أحمر
                 } label: {
                     Image(systemName: "ellipsis")
                         .font(.system(size: 17, weight: .medium))
                         .foregroundStyle(.black.opacity(0.60))
                         .frame(width: 40, height: 40)
-                        .background(Color("primarycolor").opacity(0.09))
+                        .background(Color("primarycolor").opacity(0.09))   // ← رجعتها
                         .clipShape(Circle())
                 }
-                .buttonStyle(.plain)
+                .tint(.black.opacity(0.60))                                // ← رموز السؤال والمفضلة سوداء
             }
-            .sharedBackgroundVisibility(.hidden)   // ← بعد قوس ToolbarItem
-
-            ToolbarItem(placement: .navigationBarTrailing) {
-                Button {
-                    saveEntry()
-                } label: {
-                    Image(systemName: "checkmark")
-                        .font(.system(size: 17, weight: .medium))
-                        .foregroundStyle(.black.opacity(0.60))
-                        .frame(width: 40, height: 40)
-                        .background(Color("primarycolor").opacity(0.09))
-                        .clipShape(Circle())
-                }
-                .buttonStyle(.plain)
-                .disabled(userReflectionText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
-            }
-            .sharedBackgroundVisibility(.hidden)   // ← نفس الشي
+            .sharedBackgroundVisibility(.hidden)
 
             // الصح
             ToolbarItem(placement: .navigationBarTrailing) {
@@ -162,14 +167,14 @@ struct ReflectionPageView: View {
                         .font(.system(size: 17, weight: .medium))
                         .foregroundStyle(.black.opacity(0.60))
                         .frame(width: 40, height: 40)
-                        .background(Color("primarycolor").opacity(0.09))
+                        .background(Color("primarycolor").opacity(0.09))   // ← رجعتها
                         .clipShape(Circle())
                 }
                 .buttonStyle(.plain)
                 .disabled(userReflectionText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
             }
-        }
-        .tint(Color("primarycolor").opacity(0.9))}
+            .sharedBackgroundVisibility(.hidden)
+        }        .tint(Color("primarycolor").opacity(0.9))}
 }
 
 // MARK: - Preview
