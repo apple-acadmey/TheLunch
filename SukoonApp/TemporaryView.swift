@@ -5,6 +5,7 @@
 //  Created by Raghad Alsnaie on 25/10/2026.
 //
 
+
 import SwiftUI
 
 struct TemporaryView: View {
@@ -13,6 +14,7 @@ struct TemporaryView: View {
     
     @State private var journalText: String = ""
     @State private var currentQuestion: String = ""
+    @State private var isFavourite: Bool = false
     @Environment(\.dismiss) var dismiss
     
     var dayString: String {
@@ -41,20 +43,9 @@ struct TemporaryView: View {
                         .background(Color("primarycolor").opacity(0.09))
                         .clipShape(Circle())
                 }
-               
+                .buttonStyle(.plain)
 
                 Spacer()
-
-                Button {
-                    currentQuestion = QuestionProvider.reroll(for: selectedMood, excluding: currentQuestion)
-                } label: {
-                    Image(systemName: "ellipsis")
-                        .font(.system(size: 20, weight: .medium))
-                        .foregroundStyle(.black.opacity(0.7))
-                        .frame(width: 44, height: 44)
-                        .background(Color("primarycolor").opacity(0.09))
-                        .clipShape(Circle())
-                }
             }
             .padding(.horizontal, 20)
             
@@ -131,7 +122,40 @@ struct TemporaryView: View {
             
             Spacer()
         }
-        .navigationBarHidden(true)
+        .navigationBarHidden(false)
+        .toolbar {
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Menu {
+                    Button(action: {
+                        currentQuestion = QuestionProvider.reroll(for: selectedMood, excluding: currentQuestion)
+                    }) {
+                        Label("Another question", systemImage: "arrow.triangle.2.circlepath")
+                    }
+                    
+                    Button(action: {
+                        isFavourite.toggle()
+                    }) {
+                        Label(
+                            isFavourite ? "Remove favourite" : "Add favourite",
+                            systemImage: isFavourite ? "star.fill" : "star"
+                        )
+                    }
+                    
+                    Button(role: .destructive, action: {
+                        journalText = ""
+                    }) {
+                        Label("Delete", systemImage: "trash")
+                    }
+                } label: {
+                    Image(systemName: "ellipsis")
+                        .font(.system(size: 20, weight: .medium))
+                        .foregroundStyle(.black.opacity(0.7))
+                        .frame(width: 44, height: 44)
+                        .background(Color("primarycolor").opacity(0.09))
+                        .clipShape(Circle())
+                }
+            }
+        }
     }
 }
 
@@ -153,53 +177,3 @@ extension Color {
         TemporaryView(selectedMood: .good, selectedDate: Date())
     }
 }
-
-
-
-
-
-
-
-
-
-/*import SwiftUI
-
-struct TemporaryView: View {
-    
-    
-    var body: some View {
-        
-        VStack{
-            
-            HStack{
-                
-            }
-            
-            HStack{}
-            
-            
-        }
-        
-        
-        
-        
-        
-        
-        
-    }
-    
-    
-    
-
-
-}
-
-
-
-
-
-
-
-#Preview {
-    TemporaryView()
-}*/
