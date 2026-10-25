@@ -14,7 +14,9 @@ enum Mood: String, CaseIterable {//تعريف المشاعر
 
 struct MoodScaleView: View {
     @State private var selectedMood: Mood = .upset//لحفظ انبوت اليوزر
-
+    @State private var showAlert = false
+    @State private var goToTemporaryPage = false
+    @State private var goToJournalPage = false
     var body: some View {
         VStack {
             HStack {
@@ -92,8 +94,8 @@ struct MoodScaleView: View {
                     }
                     .buttonStyle(.plain)
                     .position(points[index])
-                }
-            }
+                }//loop
+            }//ZStack
             .frame(width: 360, height: 220)
             .padding(.vertical, 50)
             .frame(height: 150)
@@ -105,6 +107,7 @@ struct MoodScaleView: View {
             
             Button{
                 //ينتقل الى صفحة الجورنال
+                showAlert = true
             }label: {
                 Text("Continue")
                         .font(.system(size: 28, weight: .semibold))
@@ -114,8 +117,33 @@ struct MoodScaleView: View {
                         .background(Color("primarycolor"))
                         .clipShape(RoundedRectangle(cornerRadius: 55))
             }
+            
+            .padding()
+                    // 3. ربط الألرت الافتراضي من أبل بالمتغير showAlert
+            .alert("Make it temporary", isPresented: $showAlert) {
+                Button("Delete After Closing", role: .destructive) {
+                    goToTemporaryPage = true      // بس يغيّر المتغير
+                }
+                Button("Keep in Journal", role: .cancel) {
+                    goToJournalPage = true        // بس يغيّر المتغير
+                }
+            } message: {
+                Text("Would you like to make this entry to disappear immediately after closing?")
+            }
+            // الـ modifiers خارج الـ alert، على نفس الـ View
+            .navigationDestination(isPresented: $goToTemporaryPage) {
+                TemporaryPage()//ينتقل لصفحه التيمبروراي
+            }
+            .navigationDestination(isPresented: $goToJournalPage) {
+                JournalPage()//ينتقل لصفحة الجورنال
+            }
+                    } message: {
+                        Text("Would you like to make this entry to disappear immediately after closing?")
+                    }
+                            
             Spacer()
         }//VStack
+        
         .padding(.horizontal, 20)
         .padding(.top, 10)
         
@@ -125,7 +153,7 @@ struct MoodScaleView: View {
         let offsets: [CGFloat] = [-20, 10, 30, 10, -20]
         return offsets[index]
     }
-}
+}//struct
 
 #Preview {
     MoodScaleView()
