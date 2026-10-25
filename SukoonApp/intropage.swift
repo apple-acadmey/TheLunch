@@ -1,6 +1,6 @@
 
 
-// xcode: set sdk=iOS
+
 
 //
 import SwiftUI
@@ -25,9 +25,10 @@ struct Intropage: View {
             
             
             // الوسط الورة والنصوص
+            // اقتراح ممكن نخليها تتحرك
             VStack(spacing:20){
                 // الصورة
-                Image("gang mood")
+                Image("moodgang")
                     .resizable()
                     .scaledToFit()
                     .frame(height:250)
@@ -41,7 +42,7 @@ struct Intropage: View {
                     .padding(.horizontal,50)
                 
                 //النص الفرعي
-                Text("Meet the gang, they will help you write about however ou feel today.")
+                Text("Meet the gang, they will help you write about however you feel today.")
                     .font(.body)
                     .foregroundColor(.gray)
                     .multilineTextAlignment(.center)
