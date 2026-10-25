@@ -4,7 +4,7 @@ import SwiftUI
 struct Sukoon: App {//بنعدل عليه باسم تطبيقنا
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            MoodScaleView()
         }
     }
 }
