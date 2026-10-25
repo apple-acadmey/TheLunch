@@ -1,4 +1,5 @@
 import SwiftUI
+import SwiftData
 
 @main
 struct Sukoon: App {//بنعدل عليه باسم تطبيقنا
@@ -6,5 +7,6 @@ struct Sukoon: App {//بنعدل عليه باسم تطبيقنا
         WindowGroup {
             MoodScaleView()
         }
+        .modelContainer(for: JournalEntryData.self)
     }
 }
