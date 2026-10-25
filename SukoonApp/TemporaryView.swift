@@ -33,73 +33,14 @@ struct TemporaryView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
             
-            HStack {
-                Button {
-                    dismiss()
-                } label: {
-                    Image(systemName: "chevron.backward")
-                        .font(.system(size: 20, weight: .medium))
-                        .foregroundStyle(.black.opacity(0.7))
-                        .frame(width: 44, height: 44)
-                        .background(Color("primarycolor").opacity(0.09))
-                        .clipShape(Circle())
-                }
-                .buttonStyle(.plain)
-
-                Spacer()
-
-                Menu {
-                    Button(action: {
-                        currentQuestion = QuestionProvider.reroll(for: selectedMood, excluding: currentQuestion)
-                    }) {
-                        Label("Another question", systemImage: "arrow.triangle.2.circlepath")
-                    }
-                    
-                    Button(action: {
-                        isFavourite.toggle()
-                    }) {
-                        Label(
-                            isFavourite ? "Remove favourite" : "Add favourite",
-                            systemImage: isFavourite ? "star.fill" : "star"
-                        )
-                    }
-                    .disabled(true)
-                    
-                    Button(role: .destructive, action: {
-                        journalText = ""
-                    }) {
-                        Label("Delete", systemImage: "trash")
-                    }
-                } label: {
-                    Image(systemName: "ellipsis")
-                        .font(.system(size: 20, weight: .medium))
-                        .foregroundStyle(.black.opacity(0.7))
-                        .frame(width: 44, height: 44)
-                        .background(Color("primarycolor").opacity(0.09))
-                        .clipShape(Circle())
-                }
-
-                Button {
-                    journalText = ""
-                    dismiss()
-                } label: {
-                    Image(systemName: "checkmark")
-                        .font(.system(size: 20, weight: .medium))
-                        .foregroundStyle(.black.opacity(0.7))
-                        .frame(width: 44, height: 44)
-                        .background(Color("primarycolor").opacity(0.09))
-                        .clipShape(Circle())
-                }
-                .buttonStyle(.plain)
-            }
-            .padding(.horizontal, 20)
-            
+            // Two-Line Date Header
             Text(formattedCurrentDate)
                 .font(.subheadline)
                 .foregroundColor(.secondary)
                 .lineSpacing(4)
                 .padding(.horizontal, 24)
             
+            // Mood Asset Image selected by user
             HStack {
                 Spacer()
                 Image(selectedMood.imageName)
@@ -115,6 +56,7 @@ struct TemporaryView: View {
                 .frame(maxWidth: .infinity, alignment: .center)
                 .padding(.top, 5)
 
+            // Question for Selected Mood & Temporary Badge
             VStack(alignment: .leading, spacing: 8) {
                 Text(currentQuestion)
                     .font(.title3)
@@ -137,11 +79,21 @@ struct TemporaryView: View {
                 }
             }
 
+            // User Reflection Text Box with Dashed Border
             ZStack(alignment: .topLeading) {
+                RoundedRectangle(cornerRadius: 16)
+                    .fill(Color(.systemBackground))
+                    .shadow(color: Color.black.opacity(0.04), radius: 8, x: 0, y: 4)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 16)
+                            .stroke(style: StrokeStyle(lineWidth: 1, dash: [5]))
+                            .foregroundStyle(Color.gray.opacity(0.4))
+                    )
+                
                 if journalText.isEmpty {
                     Text("Write your reflection here...")
                         .foregroundColor(Color(.placeholderText))
-                        .padding(.horizontal, 16)
+                        .padding(.horizontal, 20)
                         .padding(.vertical, 20)
                 }
                 
@@ -150,19 +102,70 @@ struct TemporaryView: View {
                     .background(Color.clear)
                     .padding(12)
             }
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .background(Color.clear)
-            .overlay(
-                RoundedRectangle(cornerRadius: 16)
-                    .stroke(style: StrokeStyle(lineWidth: 1, dash: [5]))
-                    .foregroundStyle(Color.gray.opacity(0.4))
-            )
+            .frame(minHeight: 250)
             .padding(.horizontal, 24)
             .padding(.bottom, 20)
             
             Spacer()
         }
-        .navigationBarHidden(true)
+        .navigationBarBackButtonHidden(true)
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            // زر الرجوع في اليسار
+            ToolbarItem(placement: .navigationBarLeading) {
+                Button(action: {
+                    dismiss()
+                }) {
+                    Image(systemName: "chevron.left")
+                        .foregroundColor(.primary)
+                }
+            }
+            
+            // الأزرار في اليمين (مفصولين وكل واحد بسطحه النظيف مثل ستايل صديقتك بدون كبسولة)
+            ToolbarItem(placement: .navigationBarTrailing) {
+                HStack(spacing: 12) {
+                    // قائمة الثلاث نقاط
+                    Menu {
+                        Button(action: {
+                            currentQuestion = QuestionProvider.reroll(for: selectedMood, excluding: currentQuestion)
+                        }) {
+                            Label("Another question", systemImage: "arrow.triangle.2.circlepath")
+                        }
+                        
+                        Button(action: {
+                            isFavourite.toggle()
+                        }) {
+                            Label(
+                                isFavourite ? "Remove favourite" : "Add favourite",
+                                systemImage: isFavourite ? "star.fill" : "star"
+                            )
+                        }
+                        .disabled(true) // مغبش وغير قابل للاختيار لأنه Temporary
+                        
+                        Button(role: .destructive, action: {
+                            journalText = ""
+                        }) {
+                            Label("Delete", systemImage: "trash")
+                        }
+                    } label: {
+                        Image(systemName: "ellipsis")
+                            .foregroundColor(.primary)
+                            .padding(4)
+                    }
+
+                    // زر الصح (يحذف النص المؤقت، يحفظ شكل المود، ويرجع للكالندر)
+                    Button {
+                        journalText = ""
+                        dismiss()
+                    } label: {
+                        Image(systemName: "checkmark")
+                            .foregroundColor(.primary)
+                            .padding(4)
+                    }
+                    .buttonStyle(.plain)
+                }
+            }
+        }
     }
 }
 
