@@ -1,6 +1,8 @@
 import SwiftUI
-
+import SwiftData
 // MARK: - Journal Reflection Page View
+
+
 struct ReflectionPageView: View {
     // Passed dynamically from MoodScaleView (no default value)
     var selectedMood: Mood
@@ -10,7 +12,22 @@ struct ReflectionPageView: View {
     @State private var isFavourite: Bool = false
     @FocusState private var isFocused: Bool
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.modelContext) private var context //للحفظ
     
+    private func saveEntry() {
+        let trimmed = userReflectionText.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty else { return }// ما نحفظ لو فاضي
+
+        let entry = JournalEntryData(
+            mood: selectedMood,
+            question: currentQuestion,
+            text: trimmed,
+            isFavourite: isFavourite
+        )
+        context.insert(entry)
+        try? context.save()
+        dismiss()
+    }//func of saving entry
     private var formattedCurrentDate: String {
         let dayFormatter = DateFormatter()
         dayFormatter.dateFormat = "EEE."
@@ -87,48 +104,72 @@ struct ReflectionPageView: View {
         }
         .navigationBarBackButtonHidden(true)
         .navigationBarTitleDisplayMode(.inline)
+        
         .toolbar {
-            // Back Button -> Pops back to MoodScaleView
+            // الرجوع
             ToolbarItem(placement: .navigationBarLeading) {
-                Button(action: {
+                Button {
                     dismiss()
-                }) {
+                } label: {
                     Image(systemName: "chevron.left")
-                        .foregroundColor(.primary)
+                        .font(.system(size: 17, weight: .medium))
+                        .foregroundStyle(.black.opacity(0.60))
+                        .frame(width: 40, height: 40)
+                        .background(Color("primarycolor").opacity(0.09))
+                        .clipShape(Circle())
                 }
+                .buttonStyle(.plain)
             }
-            
-            // Three Dots (...) Options Menu
+
+            // النقاط
             ToolbarItem(placement: .navigationBarTrailing) {
                 Menu {
-                    Button(action: {
-                        currentQuestion = QuestionProvider.reroll(for: selectedMood, excluding: currentQuestion)
-                    }) {
-                        Label("Another question", systemImage: "arrow.triangle.2.circlepath")
-                    }
-                    
-                    Button(action: {
-                        isFavourite.toggle()
-                    }) {
-                        Label(
-                            isFavourite ? "Remove favourite" : "Add favourite",
-                            systemImage: isFavourite ? "star.fill" : "star"
-                        )
-                    }
-                    
-                    Button(role: .destructive, action: {
-                        userReflectionText = ""
-                    }) {
-                        Label("Delete", systemImage: "trash")
-                    }
+                    // ... عناصر القائمة
                 } label: {
                     Image(systemName: "ellipsis")
-                        .foregroundColor(.primary)
-                        .padding(8)
+                        .font(.system(size: 17, weight: .medium))
+                        .foregroundStyle(.black.opacity(0.60))
+                        .frame(width: 40, height: 40)
+                        .background(Color("primarycolor").opacity(0.09))
+                        .clipShape(Circle())
                 }
+                .buttonStyle(.plain)
+            }
+            .sharedBackgroundVisibility(.hidden)   // ← بعد قوس ToolbarItem
+
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Button {
+                    saveEntry()
+                } label: {
+                    Image(systemName: "checkmark")
+                        .font(.system(size: 17, weight: .medium))
+                        .foregroundStyle(.black.opacity(0.60))
+                        .frame(width: 40, height: 40)
+                        .background(Color("primarycolor").opacity(0.09))
+                        .clipShape(Circle())
+                }
+                .buttonStyle(.plain)
+                .disabled(userReflectionText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+            }
+            .sharedBackgroundVisibility(.hidden)   // ← نفس الشي
+
+            // الصح
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Button {
+                    saveEntry()
+                } label: {
+                    Image(systemName: "checkmark")
+                        .font(.system(size: 17, weight: .medium))
+                        .foregroundStyle(.black.opacity(0.60))
+                        .frame(width: 40, height: 40)
+                        .background(Color("primarycolor").opacity(0.09))
+                        .clipShape(Circle())
+                }
+                .buttonStyle(.plain)
+                .disabled(userReflectionText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
             }
         }
-    }
+        .tint(Color("primarycolor").opacity(0.9))}
 }
 
 // MARK: - Preview
