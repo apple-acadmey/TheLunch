@@ -9,7 +9,16 @@ struct TemporaryView: View {
     @State private var currentQuestion: String = ""
     @State private var isFavourite: Bool = false
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.closeFlow) private var closeFlow
     @Environment(\.modelContext) private var modelContext
+    
+    private func goHome() {
+        if let closeFlow {
+            closeFlow()
+        } else {
+            dismiss()
+        }
+    }
     
     var formattedCurrentDate: String {
         let dayFormatter = DateFormatter()
@@ -131,7 +140,7 @@ struct TemporaryView: View {
                         
                         Button(role: .destructive, action: {
                             journalText = ""
-                            dismiss()
+                            goHome()
                         }) {
                             Label("Delete", systemImage: "trash")
                         }
@@ -153,7 +162,7 @@ struct TemporaryView: View {
                         modelContext.insert(newEntry)
                         
                         journalText = ""
-                        dismiss()
+                        goHome()
                     } label: {
                         Image(systemName: "checkmark")
                             .foregroundColor(journalText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? .gray : .primary)
