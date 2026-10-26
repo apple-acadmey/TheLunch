@@ -1,7 +1,5 @@
-
-//Updated upstream
-
 import SwiftUI
+import SwiftData
 
 struct TemporaryView: View {
     var selectedMood: Mood
@@ -11,6 +9,16 @@ struct TemporaryView: View {
     @State private var currentQuestion: String = ""
     @State private var isFavourite: Bool = false
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.closeFlow) private var closeFlow
+    @Environment(\.modelContext) private var modelContext
+    
+    private func goHome() {
+        if let closeFlow {
+            closeFlow()
+        } else {
+            dismiss()
+        }
+    }
     
     var formattedCurrentDate: String {
         let dayFormatter = DateFormatter()
@@ -28,14 +36,12 @@ struct TemporaryView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
             
-            // Two-Line Date Header
             Text(formattedCurrentDate)
                 .font(.subheadline)
                 .foregroundColor(.secondary)
                 .lineSpacing(4)
                 .padding(.horizontal, 24)
             
-            // Mood Asset Image selected by user
             HStack {
                 Spacer()
                 Image(selectedMood.imageName)
@@ -51,7 +57,6 @@ struct TemporaryView: View {
                 .frame(maxWidth: .infinity, alignment: .center)
                 .padding(.top, 5)
 
-            // Question for Selected Mood & Temporary Badge
             VStack(alignment: .leading, spacing: 8) {
                 Text(currentQuestion)
                     .font(.title3)
@@ -74,7 +79,6 @@ struct TemporaryView: View {
                 }
             }
 
-            // User Reflection Text Box with Dashed Border
             ZStack(alignment: .topLeading) {
                 RoundedRectangle(cornerRadius: 16)
                     .fill(Color(.systemBackground))
@@ -106,7 +110,6 @@ struct TemporaryView: View {
         .navigationBarBackButtonHidden(true)
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
-            // زر الرجوع في اليسار
             ToolbarItem(placement: .navigationBarLeading) {
                 Button(action: {
                     dismiss()
@@ -116,10 +119,8 @@ struct TemporaryView: View {
                 }
             }
             
-            // الأزرار في اليمين (مفصولين وكل واحد بسطحه النظيف مثل ستايل صديقتك بدون كبسولة)
             ToolbarItem(placement: .navigationBarTrailing) {
                 HStack(spacing: 12) {
-                    // قائمة الثلاث نقاط
                     Menu {
                         Button(action: {
                             currentQuestion = QuestionProvider.reroll(for: selectedMood, excluding: currentQuestion)
@@ -135,10 +136,11 @@ struct TemporaryView: View {
                                 systemImage: isFavourite ? "star.fill" : "star"
                             )
                         }
-                        .disabled(true) // مغبش وغير قابل للاختيار لأنه Temporary
+                        .disabled(true)
                         
                         Button(role: .destructive, action: {
                             journalText = ""
+                            goHome()
                         }) {
                             Label("Delete", systemImage: "trash")
                         }
@@ -148,16 +150,26 @@ struct TemporaryView: View {
                             .padding(4)
                     }
 
-                    // زر الصح (يحذف النص المؤقت، يحفظ شكل المود، ويرجع للكالندر)
                     Button {
+                        let newEntry = JournalEntryData(
+                            date: selectedDate,
+                            mood: selectedMood,
+                            question: currentQuestion,
+                            text: "",
+                            isFavourite: false,
+                            isTemporary: true
+                        )
+                        modelContext.insert(newEntry)
+                        
                         journalText = ""
-                        dismiss()
+                        goHome()
                     } label: {
                         Image(systemName: "checkmark")
-                            .foregroundColor(.primary)
+                            .foregroundColor(journalText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? .gray : .primary)
                             .padding(4)
                     }
                     .buttonStyle(.plain)
+                    .disabled(journalText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
                 }
             }
         }
@@ -182,5 +194,3 @@ extension Color {
         TemporaryView(selectedMood: .good, selectedDate: Date())
     }
 }
-
- //Stashed changes
