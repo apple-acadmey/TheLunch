@@ -156,10 +156,11 @@ struct TemporaryView: View {
                         dismiss()
                     } label: {
                         Image(systemName: "checkmark")
-                            .foregroundColor(.primary)
+                            .foregroundColor(journalText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? .gray : .primary)
                             .padding(4)
                     }
                     .buttonStyle(.plain)
+                    .disabled(journalText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
                 }
             }
         }
@@ -184,4 +185,3 @@ extension Color {
         TemporaryView(selectedMood: .good, selectedDate: Date())
     }
 }
-
