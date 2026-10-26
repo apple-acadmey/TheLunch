@@ -151,8 +151,10 @@ struct CalendarHomeView: View {
         }
         // ✅ التعديل هنا: الزر + يفتح MoodScaleView، و closeFlow يقفل الـ sheet ويرجع للهوم
         .sheet(isPresented: $showAdd) {
-            MoodScaleView()
-                .environment(\.closeFlow, { showAdd = false })
+            NavigationStack {
+                MoodScaleView()
+            }
+            .environment(\.closeFlow, { showAdd = false })
         }
     }
 
