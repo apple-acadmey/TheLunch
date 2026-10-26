@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="336px" height="57px" viewBox="0 0 336 57" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>Group</title>
+    <defs>
+        <path d="M0.227272727,0.227272727 L20.2272727,0.227272727" id="path-1"></path>
+        <filter x="-36.7%" y="-990.0%" width="173.3%" height="3400.0%" filterUnits="objectBoundingBox" id="filter-2">
+            <feMorphology radius="0.227272727" operator="dilate" in="SourceAlpha" result="shadowSpreadOuter1"></feMorphology>
+            <feOffset dx="0" dy="3" in="shadowSpreadOuter1" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="2" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feComposite in="shadowBlurOuter1" in2="SourceAlpha" operator="out" result="shadowBlurOuter1"></feComposite>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.25 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+        <path d="M0.227272727,0.681818182 L20.2272727,0.681818182" id="path-3"></path>
+        <filter x="-38.6%" y="-470.0%" width="177.3%" height="1700.0%" filterUnits="objectBoundingBox" id="filter-4">
+            <feMorphology radius="0.227272727" operator="dilate" in="SourceAlpha" result="shadowSpreadOuter1"></feMorphology>
+            <feOffset dx="0" dy="3" in="shadowSpreadOuter1" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="2" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feComposite in="shadowBlurOuter1" in2="SourceAlpha" operator="out" result="shadowBlurOuter1"></feComposite>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.25 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="intro-2" transform="translate(-33, -224)">
+            <g id="Group" transform="translate(32, 224)">
+                <g id="Group-4" opacity="0.55" transform="translate(1, 1)">
+                    <ellipse id="Oval-4" fill="#030303" cx="28.2187623" cy="16.7185652" rx="19.1144396" ry="13.364341"></ellipse>
+                    <circle id="Oval-3" fill="#7C4AB2" cx="27.5" cy="27.5" r="27.5"></circle>
+                    <ellipse id="Oval-9" fill="#7C4AB2" cx="28.2187623" cy="14.0831034" rx="19.1144396" ry="14.0831034"></ellipse>
+                    <ellipse id="Oval-6" fill="#FFFFFF" cx="19.6461701" cy="16.0523585" rx="5.27092368" ry="6.94803576"></ellipse>
+                    <ellipse id="Oval-8" stroke="#FFF8F8" stroke-width="0.47917488" fill="#FFFFFF" cx="35.3538299" cy="16.0523585" rx="5.03133624" ry="6.70844832"></ellipse>
+                    <ellipse id="Oval-7" fill="#000000" cx="20.6045198" cy="14.8544213" rx="3.35422416" ry="3.83339904"></ellipse>
+                    <ellipse id="Oval-10" fill="#000000" cx="34.3954802" cy="14.8544213" rx="3.35422416" ry="3.83339904"></ellipse>
+                    <ellipse id="Oval-15" fill="#7C4AB2" cx="19.6461701" cy="19.8857575" rx="5.27092368" ry="4.55216136"></ellipse>
+                    <ellipse id="Oval-16" fill="#7C4AB2" cx="35.3538299" cy="19.8857575" rx="5.27092368" ry="4.55216136"></ellipse>
+                    <path d="M16.8896527,26.7201161 C23.039535,20.7441622 31.8547731,20.1132346 37.9733474,26.2146787" id="Path" stroke="#000000" stroke-width="0.47917488" transform="translate(27.4315, 24.3242) scale(1, -1) translate(-27.4315, -24.3242)"></path>
+                </g>
+                <g id="Group-3" opacity="0.55" transform="translate(139.9915, 1)">
+                    <ellipse id="Oval-9" fill="#67DB6C" cx="27.4136554" cy="23.7396406" rx="23.4531518" ry="23.7396406"></ellipse>
+                    <path d="M28.3455278,49.1440341 C35.1173742,49.6175217 41.8953843,54.114404 46.5594596,53.1686786 C49.8697344,52.4974607 50.9018057,51.9270107 52.1637463,50.3277531 C53.0977941,49.1440341 53.0977941,49.1440341 54.0318418,47.4868276 C57.1631893,41.9311274 51.6967224,33.1827866 51.6967224,26.8901177 C51.6967224,25.5298302 51.9079435,20.6139509 51.6967224,19.3143163 C49.8167922,7.74718409 39.586678,2.50550709 27.644992,2.50550709 C16.807047,2.50550709 7.06700379,6.95633749 4.06028545,16.9468784 C3.38185368,19.2011303 3.59326156,24.4108132 3.59326156,26.8901177 C3.59326156,33.4948562 -3.64560876,43.6989269 2.42570183,50.0910093 C2.59599424,50.2702989 2.77124921,50.4404622 2.95120375,50.6018699 C9.18703696,56.1950136 21.7665564,49.1440341 28.3455278,49.1440341 Z" id="Oval-8" fill="#67DB6C"></path>
+                    <rect id="Rectangle-12" fill="#FFFFFF" x="9.42706456" y="15.7163627" width="15.4885893" height="12.4021818" rx="6.20109091"></rect>
+                    <rect id="Rectangle-11" fill="#FFFFFF" x="31.2782972" y="15.7163627" width="15.4885893" height="12.4021818" rx="6.20109091"></rect>
+                    <path d="M10.8290871,13.0764375 C12.3770614,13.2394529 14.1874543,13.2083344 16.2602657,12.9830822 C18.3330771,12.75783 20.1228303,12.394757 21.6295254,11.8938633" id="Line-12" stroke="#000000" stroke-width="2.27773372" stroke-linecap="round"></path>
+                    <path d="M33.7815929,12.9890229 C35.3089276,11.7501356 37.1090007,11.0180659 39.1818121,10.7928137 C41.2546235,10.5675615 43.0546965,10.9054398 44.5820312,11.8064487" id="Line-11" stroke="#000000" stroke-width="2.27773372" stroke-linecap="round" transform="translate(39.1818, 11.8571) scale(-1, 1) translate(-39.1818, -11.8571)"></path>
+                    <path d="M18.0293793,38.1457104 C20.505451,36.4719473 22.6075081,35.6272515 24.3355505,35.6116228 C27.5096209,35.5829161 29.9273292,38.246804 31.9839136,38.5961196 C33.7719246,38.8998174 35.9663018,37.9887239 38.5670451,35.8628391" id="Line-10" stroke="#000000" stroke-width="1.5944136" stroke-linecap="round"></path>
+                    <circle id="Oval-13" fill="#000000" cx="21.8196232" cy="21.1154352" r="2.50550709"></circle>
+                    <circle id="Oval-12" fill="#000000" cx="43.2153091" cy="21.1154352" r="2.50550709"></circle>
+                </g>
+                <g opacity="0.55" transform="translate(68.3641, -2)" id="Group-2">
+                    <g transform="translate(3.6359, 3.0299)">
+                        <rect id="Rectangle-8" fill="#DB67C1" x="0" y="8.35344244" width="51.9914756" height="46.6465576" rx="14.0911476"></rect>
+                        <path d="M21.9341038,29.1145903 C22.2463941,31.3821313 23.4611482,32.5159018 25.5783661,32.5159018 C27.695584,32.5159018 28.9103381,31.3821313 29.2226284,29.1145903" id="Line-5" stroke="#000000" stroke-width="1.94360657" stroke-linecap="round" transform="translate(25.5784, 30.8152) rotate(-1) translate(-25.5784, -30.8152)"></path>
+                        <path d="M29.2226654,19.878219 C29.6390525,22.14576 31.2587247,23.2795305 34.0816818,23.2795305 C36.904639,23.2795305 38.5243111,22.14576 38.9406982,19.878219" id="Line-5" stroke="#000000" stroke-width="1.94360657" stroke-linecap="round" transform="translate(34.0817, 21.5789) rotate(-1) translate(-34.0817, -21.5789)"></path>
+                        <path d="M12.216108,19.8866992 C12.6324951,22.1542402 14.2521672,23.2880107 17.0751244,23.2880107 C19.8980815,23.2880107 21.5177537,22.1542402 21.9341408,19.8866992" id="Line-5" stroke="#000000" stroke-width="1.94360657" stroke-linecap="round" transform="translate(17.0751, 21.5874) rotate(-1) translate(-17.0751, -21.5874)"></path>
+                        <ellipse id="Oval-3" fill="#DB67C1" cx="25.5231393" cy="8.56173557" rx="9.47951637" ry="8.56173557"></ellipse>
+                        <ellipse id="Oval-3" fill="#DB67C1" cx="40.6168479" cy="9.40524807" rx="9.47951637" ry="8.56173557"></ellipse>
+                        <ellipse id="Oval-3" fill="#DB67C1" cx="10.4513197" cy="9.04763721" rx="9.47951637" ry="8.56173557"></ellipse>
+                    </g>
+                </g>
+                <g id="Group-6" transform="translate(210.9915, 0)">
+                    <rect id="Rectangle-6" fill="#55ADFF" x="0" y="23.4347826" width="55" height="31.5652174" rx="7.17391304"></rect>
+                    <circle id="Oval" fill="#55ADFF" cx="27.5" cy="27.5" r="27.5"></circle>
+                    <rect id="Rectangle-7" fill="#FFFFFF" x="17.2173913" y="27.2608696" width="4.7826087" height="2.39130435"></rect>
+                    <line x1="19.6086957" y1="29.6521739" x2="19.6086957" y2="32.5217391" id="Line-4" stroke="#FFFFFF" stroke-width="4.7826087" fill="#FFFFFF" stroke-linecap="round" stroke-linejoin="bevel"></line>
+                    <path d="M14.5869565,23.1956522 C15.017288,26.1793722 16.691201,27.6712322 19.6086957,27.6712322 C22.5261903,27.6712322 24.2001033,26.1793722 24.6304348,23.1956522" id="Line" stroke="#000000" stroke-width="1.91304348" stroke-linecap="round"></path>
+                    <path d="M29.8913043,23.1956522 C30.3216358,26.1793722 31.9955488,27.6712322 34.9130435,27.6712322 C37.8305381,27.6712322 39.5044512,26.1793722 39.9347826,23.1956522" id="Line-3" stroke="#000000" stroke-width="1.91304348" stroke-linecap="round"></path>
+                    <path d="M29.8913043,23.1956522 C30.3216358,26.1793722 31.9955488,27.6712322 34.9130435,27.6712322 C37.8305381,27.6712322 39.5044512,26.1793722 39.9347826,23.1956522" id="Line-5" stroke="#000000" stroke-width="1.91304348" stroke-linecap="round" transform="translate(34.913, 25.4334) rotate(-1) translate(-34.913, -25.4334)"></path>
+                </g>
+                <g id="Group-5" opacity="0.55" transform="translate(281.9915, 4)">
+                    <rect id="Rectangle-6" fill="#DE3D3D" x="0" y="0" width="55" height="52.2727273" rx="4.54545455"></rect>
+                    <line x1="16.1111111" y1="15.6818182" x2="41.1616162" y2="15.6818182" id="Line" stroke="#979797" stroke-width="0.454545455" stroke-linecap="square"></line>
+                    <path d="M23.3715292,15.7541421 C23.5825491,15.7541421 23.6880591,15.7541421 23.7772722,15.7569457 C26.8442558,15.8533296 29.2806201,18.3674625 29.2806201,21.4359603 C29.2806201,24.504458 26.8442558,27.018591 23.7772722,27.1149748 C23.6880591,27.1177784 23.5825491,27.1177784 23.3715292,27.1177784 C23.1605093,27.1177784 23.0549994,27.1177784 22.9657863,27.1149748 C19.8988027,27.018591 17.4624383,24.504458 17.4624383,21.4359603 C17.4624383,18.3674625 19.8988027,15.8533296 22.9657863,15.7569457 C23.0549994,15.7541421 23.1605093,15.7541421 23.3715292,15.7541421 Z" id="Rectangle-7" fill="#F2F3F9"></path>
+                    <circle id="Oval-7" fill="#0C0C0D" cx="22.9545455" cy="21.5909091" r="2.04545455"></circle>
+                    <path d="M31.8181818,15.9090909 C32.0292017,15.9090909 32.1347117,15.9090909 32.2239248,15.9118945 C35.2909084,16.0082784 37.7272727,18.5224114 37.7272727,21.5909091 C37.7272727,24.6594068 35.2909084,27.1735398 32.2239248,27.2699236 C32.1347117,27.2727273 32.0292017,27.2727273 31.8181818,27.2727273 C31.6071619,27.2727273 31.501652,27.2727273 31.4124389,27.2699236 C28.3454553,27.1735398 25.9090909,24.6594068 25.9090909,21.5909091 C25.9090909,18.5224114 28.3454553,16.0082784 31.4124389,15.9118945 C31.501652,15.9090909 31.6071619,15.9090909 31.8181818,15.9090909 Z" id="Rectangle-7" fill="#F2F3F9"></path>
+                    <circle id="Oval-7" fill="#0C0C0D" cx="31.5909091" cy="21.5909091" r="2.04545455"></circle>
+                    <ellipse id="Oval-13" fill="#DE3D3D" cx="28.8636364" cy="17.0454545" rx="14.3181818" ry="4.31818182"></ellipse>
+                    <g id="Group" transform="translate(17.0579, 32.7273)" stroke-linecap="square">
+                        <g id="Line-12">
+                            <use fill="black" fill-opacity="1" filter="url(#filter-2)" xlink:href="#path-1"></use>
+                            <use stroke="#000000" stroke-width="0.454545455" fill="#0D0D0D" fill-rule="evenodd" xlink:href="#path-1"></use>
+                        </g>
+                        <g id="Line-12">
+                            <use fill="black" fill-opacity="1" filter="url(#filter-4)" xlink:href="#path-3"></use>
+                            <use stroke="#000000" stroke-width="0.454545455" fill="#0D0D0D" fill-rule="evenodd" xlink:href="#path-3"></use>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
