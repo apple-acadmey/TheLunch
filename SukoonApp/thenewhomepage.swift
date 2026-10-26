@@ -1,4 +1,5 @@
 import SwiftUI
+import SwiftData
 
 enum CalColors {
     static let background = Color(calHex: "F2F3F9")
@@ -71,14 +72,15 @@ struct CalHeader: View {
         .foregroundColor(CalColors.titleText)
     }
 }
-
+// -----------------------------cal page-----------------------------
 struct CalPage<Content: View>: View {
     @Binding var month: Date
     var leftIcon: String? = nil
     var onLeft: () -> Void = {}
     let rightIcon: String
     var onRight: () -> Void = {}
-    let onPlus: () -> Void
+    var plusIcon: String = "plus"            // جديد
+    var onPlus: (() -> Void)? = nil          // صار اختياري
     @ViewBuilder let content: Content
 
     var body: some View {
@@ -91,96 +93,179 @@ struct CalPage<Content: View>: View {
                     CalButton(icon: rightIcon, action: onRight)
                 }
                 .padding(.horizontal, 20)
+
                 CalHeader(month: $month).padding(.top, 20)
+
                 LazyVGrid(columns: calColumns, spacing: 8) { content }
                     .padding(.horizontal, 24)
                     .padding(.top, 40)
+
                 Spacer()
-                CalButton(icon: "plus", big: true, action: onPlus).padding(.bottom, 24)
+
+                // الزر الكبير يظهر بس إذا فيه أكشن
+                if let onPlus {
+                    CalButton(icon: plusIcon, big: true, action: onPlus)
+                        .padding(.bottom, 24)
+                }
             }
         }
     }
 }
 
+// --------------------------Calender screen ----------------------
+
 struct CalendarHomeScreen: View {
-    private let today = calDay(17)
-    @State private var month = calDay(17)
+    @State private var month = Date()          // الشهر الحالي الحقيقي
     @State private var showFavorites = false
-    @State private var entries: [Date: CalMood] = [
-        calDay(6): .good, calDay(7): .great, calDay(9): .upset, calDay(10): .good,
-        calDay(12): .low, calDay(14): .good, calDay(15): .unsure
-    ]
-    @State private var favorites: [Date] = [calDay(9), calDay(10), calDay(15), calDay(7)]
 
     var body: some View {
         ZStack {
-            CalendarHomeView(entries: $entries, favorites: $favorites, month: $month, today: today) {
+            CalendarHomeView(month: $month) {
                 withAnimation { showFavorites = true }
             }
             if showFavorites {
-                CalFavoritesPage(entries: $entries, favorites: $favorites, month: $month, today: today) {
-                    withAnimation { showFavorites = false }
-                }
-                .transition(.move(edge: .trailing))
+                CalFavoritesPage(month: $month, onBack: {
+                    showFavorites = false
+                })
             }
         }
     }
 }
 
-struct CalendarHomeView: View {
-    @Binding var entries: [Date: CalMood]
-    @Binding var favorites: [Date]
-    @Binding var month: Date
-    let today: Date
-    let onFavorites: () -> Void
-    @State private var selected: Date? = calDay(1)
-    @State private var showAdd = false
-    private let cal = Calendar.current
+// ------------------------------Home Page-----------------------------
 
+struct CalendarHomeView: View {
+    @Binding var month: Date   // الشهر المعروض (مشترك مع صفحة المفضلة)
+    let onFavorites: () -> Void // وش يصير لما تضغط النجمة
+    @Environment(\.modelContext) private var context//  للحذف والحفظ في الستورج
+    @Query(sort: \JournalEntryData.date)   // يجيب كل المدخلات من التخزين
+    private var allEntries: [JournalEntryData]
+    
+    @State private var selected: Date? = Calendar.current.startOfDay(for: Date())
+    @State private var showAdd = false                  // يفتح شيت الإضافة
+    @State private var entryToEdit: JournalEntryData?   // لو فيه قيمة يفتح شيت التعديل
+    @State private var dayToDelete: Date?               // لو فيه قيمة يطلع alert تأكيد الحذف
+    private let cal = Calendar.current
+    private var today: Date { cal.startOfDay(for: Date())} // اليوم الحقيقي (بداية اليوم بدون ساعة)}
+
+    private var currentMonthStart: Date {
+        cal.date(from: cal.dateComponents([.year, .month], from: today))!
+    } // أول يوم في الشهر الحالي الحقيقي عشان نمنع الشهر الجاي)
+
+
+    // مصفوفة: كل يوم ← مدخلته (المؤقتة ما تظهر)
+    private var entryByDay: [Date: JournalEntryData] {
+        var dict: [Date: JournalEntryData] = [:]
+        for e in allEntries where !e.isTemporary {
+            dict[cal.startOfDay(for: e.date)] = e
+        }
+        return dict
+    }
+
+    // أيام الشهر المعروض، من أول يوم إلى اليوم الحقيقي فقط
+    // (كل يوم يمر يزيد مربع، والأيام اللي ما جت ما تظهر)
     private var days: [Date] {
         let start = cal.date(from: cal.dateComponents([.year, .month], from: month))!
         let count = cal.range(of: .day, in: .month, for: start)!.count
         return (0..<count)
             .compactMap { cal.date(byAdding: .day, value: $0, to: start) }
-            .filter { $0 <= cal.startOfDay(for: today) }
+            .filter { $0 <= today }
     }
 
+    // هل اليوم المحدد له مزاج؟ (يحدد الزر اللي تحت: قلم أو بلس)
+    private var selectedHasMood: Bool {
+        guard let selected else { return false }
+        return entryByDay[selected] != nil
+    }
+
+    // MARK: - الواجهة
     var body: some View {
-        CalPage(month: $month, rightIcon: "star", onRight: onFavorites, onPlus: { showAdd = true }) {
+        CalPage(month: $month,
+                rightIcon: "star",
+                onRight: onFavorites,
+                plusIcon: selectedHasMood ? "pencil" : "plus",   // قلم لو له مزاج، بلس لو لا
+                onPlus: handlePlus) {
             ForEach(days, id: \.self) { date in cell(date) }
         }
-        .sheet(isPresented: $showAdd) {
-            CalAddMoodView { mood in
-                entries[cal.startOfDay(for: selected ?? today)] = mood
-                showAdd = false
+
+        // لما يتغير الشهر: نمنع الشهر الجاي، ونحدد اليوم لو رجع للشهر الحالي
+        .onChange(of: month) { _, newValue in
+            if cal.compare(newValue, to: currentMonthStart, toGranularity: .month) == .orderedDescending {
+                month = currentMonthStart
             }
+            selected = cal.isDate(month, equalTo: today, toGranularity: .month) ? today : nil
+        }
+
+        // 1. بديل شيت الإضافة: ينتقل لصفحة MoodScaleView كصفحة جديدة
+        .navigationDestination(isPresented: $showAdd) {
+            MoodScaleView(date: $selectedMood ?? today)
+        }
+
+        // 2. بديل شيت التعديل: ينتقل لصفحة ReflectionPageView كصفحة جديدة
+        .navigationDestination(item: $entryToEdit) { entry in
+            ReflectionPageView(selectedMood: entry.mood, entry: entry)
+        }
+        
+
+        // يقفل شيت الإضافة بعد ما تنحفظ المدخلة (لأن عدد المدخلات يتغير)
+        .onChange(of: allEntries.count) { showAdd = false }
+
+        // alert تأكيد الحذف
+        .alert("Delete this entry?",
+               isPresented: Binding(get: { dayToDelete != nil },
+                                    set: { if !$0 { dayToDelete = nil } })) {
+            Button("Delete", role: .destructive) { deleteSelectedDay() }
+            Button("Cancel", role: .cancel) { dayToDelete = nil }
+        } message: {
+            Text("Are you sure? This can't be undone.")
+        }
+    }   // ← نهاية body
+
+    // MARK: - الدوال
+
+    // الزر اللي تحت: قلم يعدّل، بلس يضيف
+    private func handlePlus() {
+        guard let date = selected else { return }
+        if let entry = entryByDay[date] {
+            entryToEdit = entry     // له مزاج ← تعديل
+        } else {
+            showAdd = true          // ما له مزاج ← إضافة
         }
     }
 
+    // ينفذ الحذف بعد ما المستخدم يوافق في الـ alert
+    private func deleteSelectedDay() {
+        guard let day = dayToDelete else { return }
+        for e in allEntries where cal.isDate(e.date, inSameDayAs: day) {
+            context.delete(e)
+        }
+        dayToDelete = nil
+    }
+
+    // المربع الواحد في الشبكة
     private func cell(_ date: Date) -> some View {
-        Button { selected = date } label: {
+        let isSelected = selected == date
+        return Button { selected = date } label: {
             Color.clear
                 .aspectRatio(1, contentMode: .fit)
-                .overlay(cellContent(date))
                 .overlay(
-                    Circle()
-                        .stroke(CalColors.primary, lineWidth: selected == date ? 3 : 0)
-                        .padding(-4)
+                    cellContent(date)
+                        // البوردر اللي يتبع شكل الشخصية (من View+Outline.swift)
+                        .outline(color: Color("selectionBorder"), width: isSelected ? 3 : 0)
                 )
         }
         .buttonStyle(.plain)
+        // ضغطة مطولة على شخصية: مفضلة أو حذف (الحذف يطلع له تأكيد)
         .contextMenu {
-            if entries[date] != nil {
-                Button(favorites.contains(date) ? "Remove from favorites" : "Add to favorites") {
-                    if favorites.contains(date) {
-                        favorites.removeAll { $0 == date }
-                    } else {
-                        favorites.append(date)
-                    }
+            if let entry = entryByDay[date] {
+                Button {
+                    entry.isFavourite.toggle()
+                } label: {
+                    Label(entry.isFavourite ? "Remove from favorites" : "Add to favorites",
+                          systemImage: entry.isFavourite ? "star.slash" : "star")
                 }
                 Button(role: .destructive) {
-                    entries[date] = nil
-                    favorites.removeAll { $0 == date }
+                    dayToDelete = date
                 } label: {
                     Label("Delete", systemImage: "trash")
                 }
@@ -188,16 +273,22 @@ struct CalendarHomeView: View {
         }
     }
 
+    // وش يظهر داخل المربع حسب حالة اليوم
     @ViewBuilder
     private func cellContent(_ date: Date) -> some View {
-        if cal.isDate(date, inSameDayAs: today) {
+        if let entry = entryByDay[date] {
+            // 1) فيه مدخلة محفوظة ← صورة المزاج
+            Image(entry.mood.imageName)
+                .resizable()
+                .scaledToFit()
+        } else if cal.isDateInToday(date) {
+            // 2) اليوم الحالي بدون مدخلة ← دائرة مكتوب فيها TODAY
             ZStack {
                 Circle().fill(CalColors.primary)
                 Text("TODAY").font(.system(size: 14, weight: .bold)).foregroundColor(.white)
             }
-        } else if let mood = entries[date] {
-            mood.image
         } else {
+            // 3) يوم قديم بدون مدخلة ← دائرة فيها الرقم
             ZStack {
                 Circle().fill(CalColors.dayCircle)
                 Text("\(cal.component(.day, from: date))")
@@ -206,49 +297,62 @@ struct CalendarHomeView: View {
             }
         }
     }
-}
+}   // ← نهاية struct، وما يجي بعدها شي في الملف
+//------------------FAVOURITE VIEW-------------------------
 
 struct CalFavoritesPage: View {
-    @Binding var entries: [Date: CalMood]
-    @Binding var favorites: [Date]
     @Binding var month: Date
-    let today: Date
     let onBack: () -> Void
-    @State private var showAdd = false
+
     private let cal = Calendar.current
 
-    private var shown: [Date] {
-        favorites.filter { cal.isDate($0, equalTo: month, toGranularity: .month) && entries[$0] != nil }
+    @Query(
+        filter: #Predicate<JournalEntryData> { $0.isFavourite == true },
+        sort: \JournalEntryData.date
+    )
+    private var favourites: [JournalEntryData]
+
+    // مفضلة الشهر المعروض فقط
+    private var shown: [JournalEntryData] {
+        favourites.filter {
+            cal.isDate($0.date, equalTo: month, toGranularity: .month)
+        }
     }
 
     var body: some View {
-        CalPage(month: $month, leftIcon: "chevron.left", onLeft: onBack, rightIcon: "star.fill", onPlus: { showAdd = true }) {
-            ForEach(shown, id: \.self) { date in
-                if let mood = entries[date] {
-                    Color.clear
-                        .aspectRatio(1, contentMode: .fit)
-                        .overlay(mood.image)
-                        .contentShape(Rectangle())
-                        .contextMenu {
-                            Button(role: .destructive) {
-                                favorites.removeAll { $0 == date }
-                            } label: {
-                                Label("Remove from favorites", systemImage: "star.slash")
-                            }
+        CalPage(month: $month,
+                rightIcon: "star.fill",
+                onRight: onBack,
+                onPlus: { }) {
+
+            ForEach(shown) { entry in
+                // الشرط اللي يحدد مين له بوردر (غيّره حسب حاجتك)
+                let isSelected = cal.isDateInToday(entry.date)
+
+                Color.clear
+                    .aspectRatio(1, contentMode: .fit)
+                    .overlay(
+                        Image(entry.mood.imageName)
+                            .resizable()
+                            .scaledToFit()
+                            .outline(color: Color("selectionBorder"),
+                                     width: isSelected ? 3 : 0)
+                            .padding(4)   // مسافة عشان البوردر ما ينقص
+                    )
+                    .contentShape(Rectangle())
+                    .contextMenu {
+                        Button(role: .destructive) {
+                            entry.isFavourite = false   // يتحفظ تلقائياً
+                        } label: {
+                            Label("Remove from favorites", systemImage: "star.slash")
                         }
-                }
-            }
-        }
-        .sheet(isPresented: $showAdd) {
-            CalAddMoodView { mood in
-                let day = cal.startOfDay(for: today)
-                entries[day] = mood
-                if !favorites.contains(day) { favorites.append(day) }
-                showAdd = false
+                    }
             }
         }
     }
-}
+}//favourite
+
+//------------------MOOD VIEW-------------------------
 
 struct CalAddMoodView: View {
     let onPick: (CalMood) -> Void
@@ -269,6 +373,19 @@ struct CalAddMoodView: View {
         .padding(.top, 30)
         .frame(minWidth: 400, minHeight: 240, alignment: .top)
         .background(CalColors.background.ignoresSafeArea())
+    }
+}//mood
+//------- BORDER --------
+import SwiftUI
+
+extension View {
+    /// بوردر يتبع شكل الصورة الشفافة
+    func outline(color: Color, width: CGFloat = 3) -> some View {
+        self
+            .shadow(color: color, radius: 0, x:  width, y: 0)
+            .shadow(color: color, radius: 0, x: -width, y: 0)
+            .shadow(color: color, radius: 0, x: 0, y:  width)
+            .shadow(color: color, radius: 0, x: 0, y: -width)
     }
 }
 
