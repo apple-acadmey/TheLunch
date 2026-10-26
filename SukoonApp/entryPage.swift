@@ -1,6 +1,22 @@
 
+
 import SwiftUI
 import SwiftData
+
+// MARK: - Close Flow (يقفل كل الصفحات ويرجع للهوم)
+
+private struct CloseFlowKey: EnvironmentKey {
+    static var defaultValue: (() -> Void)? { nil }
+}
+
+extension EnvironmentValues {
+    /// Set this from the home screen on the sheet content.
+    /// Calling it closes the whole add-entry flow.
+    var closeFlow: (() -> Void)? {
+        get { self[CloseFlowKey.self] }
+        set { self[CloseFlowKey.self] = newValue }
+    }
+}
 
 // MARK: - Journal Reflection Page View
 
@@ -8,11 +24,10 @@ struct ReflectionPageView: View {
     // Passed dynamically from MoodScaleView (no default value)
     var selectedMood: Mood
 
-    // Optional: only needed if an entry was already created before this screen.
-    // From MoodScaleView it stays nil, because nothing is saved until the checkmark.
+    // Optional: only needed if an entry was already created before this screen
     var existingEntry: JournalEntryData? = nil
 
-    // Called after Delete to take the user back to the home screen
+    // Optional: still supported, but not needed if the home screen sets closeFlow
     var onDelete: (() -> Void)? = nil
 
     @State private var currentQuestion: String = ""
@@ -20,7 +35,20 @@ struct ReflectionPageView: View {
     @State private var isFavourite: Bool = false
     @FocusState private var isFocused: Bool
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.closeFlow) private var closeFlow
     @Environment(\.modelContext) private var context // للحفظ
+
+    // MARK: - Go Home
+
+    private func goHome() {
+        if let onDelete {
+            onDelete()
+        } else if let closeFlow {
+            closeFlow()   // يقفل كل الصفحات ويرجع للهوم
+        } else {
+            dismiss()     // fallback: one step back
+        }
+    }
 
     // MARK: - Save
 
@@ -29,7 +57,6 @@ struct ReflectionPageView: View {
         guard !trimmed.isEmpty else { return } // ما نحفظ لو فاضي
 
         if let entry = existingEntry {
-            // Update the existing entry and make it permanent
             entry.question = currentQuestion
             entry.text = trimmed
             entry.isFavourite = isFavourite
@@ -46,7 +73,7 @@ struct ReflectionPageView: View {
         }
 
         try? context.save()
-        dismiss()
+        goHome()
     } // func of saving entry
 
     // MARK: - Delete
@@ -58,18 +85,13 @@ struct ReflectionPageView: View {
         currentQuestion = ""
         isFocused = false
 
-        // Delete the entry from SwiftData if one already exists
+        // لو فيه entry محفوظ مسبقاً نحذفه من SwiftData
         if let entry = existingEntry {
             context.delete(entry)
             try? context.save()
         }
 
-        // Go back to the home screen (or one step back if no closure was given)
-        if let onDelete {
-            onDelete()
-        } else {
-            dismiss()
-        }
+        goHome()
     }
 
     // MARK: - Date
@@ -153,7 +175,7 @@ struct ReflectionPageView: View {
         .navigationBarBackButtonHidden(true)
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
-            // الرجوع
+            // الرجوع (خطوة وحدة للخلف)
             ToolbarItem(placement: .navigationBarLeading) {
                 Button {
                     dismiss()
@@ -234,8 +256,6 @@ struct ReflectionPageView: View {
     }
     .modelContainer(for: JournalEntryData.self, inMemory: true)
 }
-
-
 
 
 
