@@ -147,8 +147,10 @@ struct IntroPagetwo: View {
                 ZStack(alignment: .topLeading){
                     Image("prmptbox")
                         .resizable()
-                        .scaledToFit()
-                    
+                                                .scaledToFit()
+                                                .shadow(color: Color(red: 91/255, green: 43/255, blue: 184/255).opacity(0.16),
+                                                        radius: 18, x: 0, y: 10)
+                                            
                     
                     VStack(alignment: .leading, spacing:6) {
                         Text("Today's Prompt")

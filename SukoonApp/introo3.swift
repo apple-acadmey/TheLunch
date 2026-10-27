@@ -13,47 +13,47 @@ private func i3Hex(_ hex: String) -> Color {
 
 private enum I3 {
     static let ink      = i3Hex("#16131F")
-    static let accent   = i3Hex("#4B3AA8")
-    static let btn      = i3Hex("#5B2BB8")
+    static let accent   = i3Hex("#7C4AB2")
     static let chipBG   = i3Hex("#E4DCFB")
     static let chipText = i3Hex("#5B46C4")
     static let muted    = i3Hex("#3A3744")
-    static let dotGray  = i3Hex("#C9C6D3")
+    static let gray     = i3Hex("#6B6B73")
+    static let shadow   = i3Hex("#5B2BB8")
 }
 
 private struct I3Card: View {
     var body: some View {
         ZStack(alignment: .bottomLeading) {
-            VStack(alignment: .leading, spacing: 18) {
+            VStack(alignment: .leading, spacing: 16) {
                 Text("TEMPORARY")
-                    .font(.system(size: 13, weight: .semibold))
-                    .tracking(0.6)
+                    .font(.system(size: 12, weight: .semibold))
+                    .tracking(0.5)
                     .foregroundColor(I3.chipText)
-                    .padding(.horizontal, 12)
-                    .padding(.vertical, 6)
+                    .padding(.horizontal, 10)
+                    .padding(.vertical, 5)
                     .background(Capsule().fill(I3.chipBG))
 
                 Text("I just need to get this out of my chest, no one will ever read it…")
-                    .font(.system(size: 19, weight: .semibold))
+                    .font(.system(size: 16, weight: .semibold))
                     .foregroundColor(I3.ink)
-                    .lineSpacing(3)
+                    .lineSpacing(2)
                     .fixedSize(horizontal: false, vertical: true)
             }
-            .padding(.horizontal, 26)
+            .padding(.horizontal, 24)
             .padding(.top, 26)
-            .padding(.bottom, 80)
+            .padding(.bottom, 58)
             .frame(maxWidth: .infinity, alignment: .leading)
             .background(
-                RoundedRectangle(cornerRadius: 30, style: .continuous)
-                    .fill(.white.opacity(0.65))
-                    .shadow(color: I3.btn.opacity(0.25), radius: 20, x: 0, y: 12)
+                RoundedRectangle(cornerRadius: 28, style: .continuous)
+                    .fill(Color.white)
+                    .shadow(color: I3.shadow.opacity(0.16), radius: 18, x: 0, y: 10)
             )
 
             Image("Image1")
                 .resizable()
                 .scaledToFit()
-                .frame(width: 96, height: 100)
-                .offset(x: -26, y: 34)
+                .frame(width: 80, height: 80)
+                .offset(x: -4, y: 40)
         }
     }
 }
@@ -64,19 +64,15 @@ struct Intro3View: View {
 
     var body: some View {
         ZStack {
-            LinearGradient(
-                colors: [i3Hex("#EAF3E6"), i3Hex("#F1EEFA"), i3Hex("#F7F6FB")],
-                startPoint: .topLeading,
-                endPoint: .bottomTrailing
-            )
-            .ignoresSafeArea()
+            Color.white
+                .ignoresSafeArea()
 
             VStack(alignment: .leading, spacing: 0) {
                 HStack {
                     Spacer()
                     Button("Skip", action: onSkip)
-                        .font(.system(size: 15))
-                        .foregroundColor(I3.muted.opacity(0.8))
+                        .font(.system(size: 14))
+                        .foregroundColor(I3.muted.opacity(0.6))
                 }
 
                 VStack(alignment: .leading, spacing: 0) {
@@ -85,20 +81,19 @@ struct Intro3View: View {
                     Text("It won't stay.")
                         .foregroundColor(I3.accent)
                 }
-                .font(.system(size: 38, weight: .heavy))
-                .padding(.top, 70)
+                .font(.system(size: 32, weight: .bold))
+                .padding(.top, 50)
 
                 I3Card()
-                    .padding(.top, 64)
-                    .padding(.leading, 14)
-                    .padding(.trailing, 6)
+                    .padding(.top, 46)
+                    .padding(.horizontal, 22)
 
                 Text("Start a temporary journal to say anything. It deletes itself automatically, no trace left.")
-                    .font(.system(size: 18))
-                    .foregroundColor(I3.muted)
-                    .lineSpacing(3)
-                    .padding(.top, 70)
-                    .padding(.leading, 4)
+                    .font(.system(size: 15))
+                    .foregroundColor(I3.gray)
+                    .lineSpacing(2)
+                    .padding(.top, 80)
+                    .padding(.leading, 22)
 
                 Spacer()
 
@@ -124,18 +119,19 @@ struct Intro3View: View {
                             navigatetonext = true
                         } label: {
                             Image(systemName: "arrow.forward")
-                                .font(.system(size: 24, weight: .medium))
-                                .foregroundStyle(.white.opacity(0.60))
-                                .frame(width: 56, height: 56)
+                                .font(.system(size: 26, weight: .light))
+                                .foregroundStyle(.white)
+                                .frame(width: 60, height: 60)
                                 .background(Color("primarycolor"))
                                 .clipShape(Circle())
                         }
+                        .padding(.trailing, 6)
                     }
                 }
-                .padding(.bottom, 8)
+                .padding(.bottom, 50)
             }
-            .padding(.horizontal, 28)
-            .padding(.top, 12)
+            .padding(.horizontal, 24)
+            .padding(.top, 8)
         }
         .navigationBarBackButtonHidden(true)
         .navigationDestination(isPresented: $navigatetonext) {
