@@ -196,40 +196,41 @@ struct CalendarHomeView: View {
     }
 
     var body: some View {
-        CalPage(month: $month,
-                rightIcon: "star",
-                onRight: onFavorites,
-                plusIcon: selectedEditableEntry != nil ? "pencil" : "plus",
-                onPlus: plusAction) {
-            ForEach(days, id: \.self) { date in
-                cell(date)
+        NavigationStack{
+            CalPage(month: $month,
+                    rightIcon: "star",
+                    onRight: onFavorites,
+                    plusIcon: selectedEditableEntry != nil ? "pencil" : "plus",
+                    onPlus: plusAction) {
+                ForEach(days, id: \.self) { date in
+                    cell(date)
+                }
             }
-        }
-        .toolbar(.hidden, for: .navigationBar)
-        .navigationDestination(isPresented: $showAdd) {
-            MoodScaleView(date: selected ?? today)
-        }
-        .navigationDestination(item: $entryToEdit) { entry in
-            ReflectionPageView(selectedMood: entry.mood, entry: entry)
-        }
-        .onChange(of: month) { _, newValue in
-            if cal.compare(newValue, to: currentMonthStart, toGranularity: .month) == .orderedDescending {
-                month = currentMonthStart
-            }
-            selected = cal.isDate(month, equalTo: today, toGranularity: .month) ? today : nil
-        }
-        // بعد حفظ مدخلة جديدة يرجع للكالندر مباشرة
-        .onChange(of: allEntries.count) { showAdd = false }
-        .alert("Delete this entry?",
-               isPresented: Binding(get: { dayToDelete != nil },
-                                    set: { if !$0 { dayToDelete = nil } })) {
-            Button("Delete", role: .destructive) { deleteSelectedDay() }
-            Button("Cancel", role: .cancel) { dayToDelete = nil }
-        } message: {
-            Text("Are you sure? This can't be undone.")
+                    .toolbar(.hidden, for: .navigationBar)
+                    .navigationDestination(isPresented: $showAdd) {
+                        MoodScaleView(date: selected ?? today)
+                    }
+                    .navigationDestination(item: $entryToEdit) { entry in
+                        ReflectionPageView(selectedMood: entry.mood, existingEntry: entry)
+                    }
+                    .onChange(of: month) { _, newValue in
+                        if cal.compare(newValue, to: currentMonthStart, toGranularity: .month) == .orderedDescending {
+                            month = currentMonthStart
+                        }
+                        selected = cal.isDate(month, equalTo: today, toGranularity: .month) ? today : nil
+                    }
+            // بعد حفظ مدخلة جديدة يرجع للكالندر مباشرة
+                    .onChange(of: allEntries.count) { showAdd = false }
+                    .alert("Delete this entry?",
+                           isPresented: Binding(get: { dayToDelete != nil },
+                                                set: { if !$0 { dayToDelete = nil } })) {
+                        Button("Delete", role: .destructive) { deleteSelectedDay() }
+                        Button("Cancel", role: .cancel) { dayToDelete = nil }
+                    } message: {
+                        Text("Are you sure? This can't be undone.")
+                    }
         }
     }
-
     //-------------FUNCTIONS --------------
 
     // الضغطة على المربع: تحديد فقط
@@ -402,4 +403,4 @@ extension View {
 #Preview {
     CalendarHomeScreen()
 }
- */
+

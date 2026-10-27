@@ -168,7 +168,11 @@ struct ReflectionPageView: View {
             Spacer()
         }
         .onAppear {
-            if currentQuestion.isEmpty {
+            if let entry = existingEntry {
+                if currentQuestion.isEmpty { currentQuestion = entry.question }
+                if userReflectionText.isEmpty { userReflectionText = entry.text }
+                isFavourite = entry.isFavourite
+            } else if currentQuestion.isEmpty {
                 currentQuestion = QuestionProvider.question(for: selectedMood)
             }
         }
