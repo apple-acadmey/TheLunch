@@ -1,3 +1,4 @@
+
 import SwiftUI
 import SwiftData
 
@@ -209,9 +210,15 @@ struct CalendarHomeView: View {
                     .toolbar(.hidden, for: .navigationBar)
                     .navigationDestination(isPresented: $showAdd) {
                         MoodScaleView(date: selected ?? today)
+                            // ✅ اليوم اللي ضغط عليه اليوزر يوصل لصفحة الكتابة
+                            .environment(\.entryDate, selected ?? today)
+                            // ✅ Delete / Save في صفحة الكتابة يرجعون للهوم
+                            .environment(\.closeFlow, { showAdd = false })
                     }
                     .navigationDestination(item: $entryToEdit) { entry in
                         ReflectionPageView(selectedMood: entry.mood, existingEntry: entry)
+                            // ✅ Delete / Save أثناء التعديل يرجعون للهوم
+                            .environment(\.closeFlow, { entryToEdit = nil })
                     }
                     .onChange(of: month) { _, newValue in
                         if cal.compare(newValue, to: currentMonthStart, toGranularity: .month) == .orderedDescending {
@@ -403,4 +410,3 @@ extension View {
 #Preview {
     CalendarHomeScreen()
 }
-
