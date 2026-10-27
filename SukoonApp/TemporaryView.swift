@@ -10,7 +10,12 @@ struct TemporaryView: View {
     @State private var isFavourite: Bool = false
     @Environment(\.dismiss) private var dismiss
     @Environment(\.closeFlow) private var closeFlow
+    @Environment(\.entryDate) private var environmentDate
     @Environment(\.modelContext) private var modelContext
+    
+    private var effectiveDate: Date {
+        return selectedDate == Date() ? environmentDate : selectedDate
+    }
     
     private func goHome() {
         if let closeFlow {
@@ -27,8 +32,8 @@ struct TemporaryView: View {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "d.MMM"
         
-        let day = dayFormatter.string(from: selectedDate).lowercased()
-        let date = dateFormatter.string(from: selectedDate)
+        let day = dayFormatter.string(from: effectiveDate).lowercased()
+        let date = dateFormatter.string(from: effectiveDate)
         
         return "\(day)\n\(date)"
     }
@@ -152,7 +157,7 @@ struct TemporaryView: View {
 
                     Button {
                         let newEntry = JournalEntryData(
-                            date: selectedDate,
+                            date: effectiveDate,
                             mood: selectedMood,
                             question: currentQuestion,
                             text: "",
