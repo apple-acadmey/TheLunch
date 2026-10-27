@@ -126,10 +126,10 @@ struct MoodScaleView: View {
         .padding(.top, 10)
         .toolbar(.hidden, for: .navigationBar)
         .navigationDestination(isPresented: $goToTemporaryPage) {
-            TemporaryView(selectedMood: selectedMood, date: date)
+            TemporaryView(selectedMood: selectedMood, selectedDate: date)
         }
         .navigationDestination(isPresented: $goToJournalPage) {
-            ReflectionPageView(selectedMood: selectedMood, date: date)
+            ReflectionPageView(selectedMood: selectedMood)
         }
     }
 }
