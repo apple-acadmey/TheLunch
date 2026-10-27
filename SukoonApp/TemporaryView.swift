@@ -3,20 +3,19 @@ import SwiftData
 
 struct TemporaryView: View {
     var selectedMood: Mood
-    var selectedDate: Date = Date()
-    
+    var selectedDate: Date          // لازم يتمرّر من MoodScaleView
+
     @State private var journalText: String = ""
     @State private var currentQuestion: String = ""
     @State private var isFavourite: Bool = false
     @Environment(\.dismiss) private var dismiss
     @Environment(\.closeFlow) private var closeFlow
-    @Environment(\.entryDate) private var environmentDate
     @Environment(\.modelContext) private var modelContext
-    
-    private var effectiveDate: Date {
-        return selectedDate == Date() ? environmentDate : selectedDate
+
+    private var isTextEmpty: Bool {
+        journalText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
     }
-    
+
     private func goHome() {
         if let closeFlow {
             closeFlow()
@@ -24,29 +23,48 @@ struct TemporaryView: View {
             dismiss()
         }
     }
-    
+
+    private func saveTemporary() {
+        let trimmed = journalText.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty else { return }
+
+        let newEntry = JournalEntryData(
+            date: selectedDate,
+            mood: selectedMood,
+            question: currentQuestion,
+            text: trimmed,
+            isFavourite: false,
+            isTemporary: true
+        )
+        modelContext.insert(newEntry)
+        try? modelContext.save()
+
+        journalText = ""
+        goHome()
+    }
+
     var formattedCurrentDate: String {
         let dayFormatter = DateFormatter()
         dayFormatter.dateFormat = "EEE."
-        
+
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "d.MMM"
-        
-        let day = dayFormatter.string(from: effectiveDate).lowercased()
-        let date = dateFormatter.string(from: effectiveDate)
-        
+
+        let day = dayFormatter.string(from: selectedDate).lowercased()
+        let date = dateFormatter.string(from: selectedDate)
+
         return "\(day)\n\(date)"
     }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
-            
+
             Text(formattedCurrentDate)
                 .font(.subheadline)
-                .foregroundColor(.secondary)
+                .foregroundColor(Color("datescolortxt"))
                 .lineSpacing(4)
                 .padding(.horizontal, 24)
-            
+
             HStack {
                 Spacer()
                 Image(selectedMood.imageName)
@@ -56,7 +74,7 @@ struct TemporaryView: View {
                 Spacer()
             }
             .padding(.vertical, 8)
-            
+
             Divider()
                 .frame(width: 370)
                 .frame(maxWidth: .infinity, alignment: .center)
@@ -66,14 +84,14 @@ struct TemporaryView: View {
                 Text(currentQuestion)
                     .font(.title3)
                     .fontWeight(.semibold)
-                    .foregroundColor(.primary)
-                
+                    .foregroundColor(Color("titleText"))
+
                 Text("Temporary")
                     .font(.system(size: 12, weight: .medium))
-                    .foregroundStyle(Color(hex: "7C4AB2"))
+                    .foregroundStyle(Color("primarycolor"))
                     .padding(.horizontal, 10)
                     .padding(.vertical, 4)
-                    .background(Color(hex: "7C4AB2").opacity(0.30))
+                    .background(Color("primarycolor").opacity(0.30))
                     .clipShape(RoundedRectangle(cornerRadius: 6))
             }
             .padding(.horizontal, 24)
@@ -86,111 +104,86 @@ struct TemporaryView: View {
 
             ZStack(alignment: .topLeading) {
                 RoundedRectangle(cornerRadius: 16)
-                    .fill(Color(.systemBackground))
+                    .fill(Color("entrybox"))
                     .shadow(color: Color.black.opacity(0.04), radius: 8, x: 0, y: 4)
                     .overlay(
                         RoundedRectangle(cornerRadius: 16)
                             .stroke(style: StrokeStyle(lineWidth: 1, dash: [5]))
-                            .foregroundStyle(Color.gray.opacity(0.4))
+                            .foregroundStyle(Color("primarycolor").opacity(0.4))
                     )
-                
+
                 if journalText.isEmpty {
                     Text("Write your reflection here...")
-                        .foregroundColor(Color(.placeholderText))
+                        .foregroundColor(Color("titleText").opacity(0.4))
                         .padding(.horizontal, 20)
                         .padding(.vertical, 20)
                 }
-                
+
                 TextEditor(text: $journalText)
                     .scrollContentBackground(.hidden)
                     .background(Color.clear)
+                    .foregroundColor(Color("titleText"))
                     .padding(12)
             }
             .frame(minHeight: 250)
             .padding(.horizontal, 24)
             .padding(.bottom, 20)
-            
+
             Spacer()
         }
+        .background(Color("background").ignoresSafeArea())
         .navigationBarBackButtonHidden(true)
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .navigationBarLeading) {
-                Button(action: {
+                Button {
                     dismiss()
-                }) {
+                } label: {
                     Image(systemName: "chevron.left")
-                        .foregroundColor(.primary)
+                        .foregroundStyle(Color("titleText"))
                 }
             }
-            
+
             ToolbarItem(placement: .navigationBarTrailing) {
-                HStack(spacing: 12) {
-                    Menu {
-                        Button(action: {
-                            currentQuestion = QuestionProvider.reroll(for: selectedMood, excluding: currentQuestion)
-                        }) {
-                            Label("Another question", systemImage: "arrow.triangle.2.circlepath")
-                        }
-                        
-                        Button(action: {
-                            isFavourite.toggle()
-                        }) {
-                            Label(
-                                isFavourite ? "Remove favourite" : "Add favourite",
-                                systemImage: isFavourite ? "star.fill" : "star"
-                            )
-                        }
-                        .disabled(true)
-                        
-                        Button(role: .destructive, action: {
-                            journalText = ""
-                            goHome()
-                        }) {
-                            Label("Delete", systemImage: "trash")
-                        }
+                Menu {
+                    Button {
+                        currentQuestion = QuestionProvider.reroll(for: selectedMood, excluding: currentQuestion)
                     } label: {
-                        Image(systemName: "ellipsis")
-                            .foregroundColor(.primary)
-                            .padding(4)
+                        Label("Another question", systemImage: "arrow.triangle.2.circlepath")
                     }
 
                     Button {
-                        let newEntry = JournalEntryData(
-                            date: effectiveDate,
-                            mood: selectedMood,
-                            question: currentQuestion,
-                            text: "",
-                            isFavourite: false,
-                            isTemporary: true
+                        isFavourite.toggle()
+                    } label: {
+                        Label(
+                            isFavourite ? "Remove favourite" : "Add favourite",
+                            systemImage: isFavourite ? "star.fill" : "star"
                         )
-                        modelContext.insert(newEntry)
-                        
+                    }
+                    .disabled(true)
+
+                    Button(role: .destructive) {
                         journalText = ""
                         goHome()
                     } label: {
-                        Image(systemName: "checkmark")
-                            .foregroundColor(journalText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? .gray : .primary)
-                            .padding(4)
+                        Label("Delete", systemImage: "trash")
                     }
-                    .buttonStyle(.plain)
-                    .disabled(journalText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+                } label: {
+                    Image(systemName: "ellipsis")
+                        .foregroundStyle(Color("titleText"))
                 }
             }
-        }
-    }
-}
 
-extension Color {
-    init(hex: String) {
-        let scanner = Scanner(string: hex)
-        _ = scanner.scanString("#")
-        var rgbValue: UInt64 = 0
-        scanner.scanHexInt64(&rgbValue)
-        let r = Double((rgbValue & 0xFF0000) >> 16) / 255.0
-        let g = Double((rgbValue & 0x00FF00) >> 8) / 255.0
-        let b = Double((rgbValue & 0x0000FF) >> 0) / 255.0
-        self.init(red: r, green: g, blue: b)
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Button {
+                    saveTemporary()
+                } label: {
+                    Image(systemName: "checkmark")
+                        .foregroundStyle(isTextEmpty ? Color("titleText").opacity(0.3) : Color("titleText"))
+                }
+                .disabled(isTextEmpty)
+            }
+        }
     }
 }
 
@@ -198,4 +191,5 @@ extension Color {
     NavigationStack {
         TemporaryView(selectedMood: .good, selectedDate: Date())
     }
+    .modelContainer(for: JournalEntryData.self, inMemory: true)
 }
