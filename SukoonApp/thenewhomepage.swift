@@ -403,4 +403,3 @@ extension View {
 #Preview {
     CalendarHomeScreen()
 }
-
