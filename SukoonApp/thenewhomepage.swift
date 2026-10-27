@@ -266,7 +266,7 @@ struct CalendarHomeView: View {
             Image(entry.mood.imageName)
                 .resizable()
                 .scaledToFit()
-                .outline(color: Color("primarycolor"), width: isSelected ? 3 : 0)
+                .outline(color: Color("bordercal"), width: isSelected ? 3 : 0)   // ← bordercal
         } else if cal.isDateInToday(date) {
             ZStack {
                 Circle().fill(Color("primarycolor"))
@@ -278,7 +278,7 @@ struct CalendarHomeView: View {
                 Circle().fill(Color("dayCircle"))
                 Text("\(cal.component(.day, from: date))")
                     .font(.system(size: 26))
-                    .foregroundColor(Color("datescolortxt"))   // ← اللون الجديد
+                    .foregroundColor(Color("datescolortxt"))
             }
             .overlay(selectionRing(isSelected))
         }
@@ -288,7 +288,7 @@ struct CalendarHomeView: View {
     private func selectionRing(_ isSelected: Bool) -> some View {
         if isSelected {
             Circle()
-                .stroke(Color("primarycolor"), lineWidth: 3)
+                .stroke(Color("bordercal"), lineWidth: 3)   // ← bordercal
                 .padding(-3)
         }
     }
@@ -323,7 +323,7 @@ struct CalFavoritesPage: View {
                         Image(entry.mood.imageName)
                             .resizable()
                             .scaledToFit()
-                            .outline(color: Color("primarycolor"),
+                            .outline(color: Color("bordercal"),   // ← bordercal
                                      width: isSelected ? 3 : 0)
                             .padding(4)
                     )
@@ -378,4 +378,4 @@ extension View {
 #Preview {
     CalendarHomeScreen()
         .modelContainer(for: JournalEntryData.self, inMemory: true)
-}
+}ے
