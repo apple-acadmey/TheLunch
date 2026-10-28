@@ -1,13 +1,13 @@
 import SwiftUI
 
-// 1. هيكل البيانات
+// 1. هيكل البيانات الأساسي
 struct OnboardingItem {
     let imageName: String
     let title: String
     let subtitle: String
 }
 
-// 2. كلاس الألوان الخاص بالصفحة الثالثة (كرت فاطمة)
+// 2. كلاس الألوان الخاص بالصفحة الثالثة
 private func i3Hex(_ hex: String) -> Color {
     let s = hex.trimmingCharacters(in: CharacterSet.alphanumerics.inverted)
     var v: UInt64 = 0
@@ -66,30 +66,38 @@ private struct I3Card: View {
     }
 }
 
-// 3. الواجهة الرئيسية (View) المدمجة
+// 3. الواجهة الرئيسية
 struct onboarding: View {
-    @State private var currentPage = 0
-    
+    @State private var page = 0
+    @State private var showHome = false // متغير لتفعيل الانتقال للهوم
+    let pagesCount = 4
+
     var body: some View {
-        VStack(alignment: .leading, spacing: 0) {
-            
-            // زر التخطي (Skip) العلوي
-            HStack {
-                Spacer()
-                Button(action: {
-                    print("skip clicked")
-                }) {
-                    Text("skip")
-                        .font(.subheadline)
-                        .foregroundColor(.gray)
+        ZStack {
+            Color(.systemBackground).ignoresSafeArea()
+
+            VStack(alignment: .leading, spacing: 0) {
+                
+                // زر التخطي (Skip) العلوي - يختفي في الصفحة الأخيرة
+                HStack {
+                    Spacer()
+                    if page < 3 {
+                        Button(action: {
+                            showHome = true // الانتقال للهوم عند الضغط على skip
+                        }) {
+                            Text("skip")
+                                .font(.subheadline)
+                                .foregroundColor(.gray)
+                        }
+                    }
                 }
-            }
-            .padding(.horizontal)
-            .padding(.top, 10)
-            
-            // محتوى الصفحة المتغير حسب رقم currentPage
-            VStack(spacing: 0) {
-                if currentPage == 0 {
+                .frame(height: 30)
+                .padding(.horizontal)
+                .padding(.top, 10)
+
+                // الـ TabView الخاص بالسحب بين الصفحات (Swipe)
+                TabView(selection: $page) {
+                    
                     // --- الصفحة الأولى ---
                     VStack(spacing: 20) {
                         Spacer()
@@ -111,9 +119,9 @@ struct onboarding: View {
                             .padding(.horizontal, 20)
                         Spacer()
                     }
-                    
-                } else if currentPage == 1 {
-                    // --- الصفحة الثانية (ببوكس البرومبت) ---
+                    .tag(0)
+
+                    // --- الصفحة الثانية (بوكس البرومبت) ---
                     VStack(alignment: .leading, spacing: 0) {
                         Text("How are you feeling?")
                             .font(.system(size: 28, weight: .bold))
@@ -152,8 +160,8 @@ struct onboarding: View {
                         
                         Spacer()
                     }
-                    
-                } else if currentPage == 2 {
+                    .tag(1)
+
                     // --- الصفحة الثالثة (كرت فاطمة) ---
                     VStack(alignment: .leading, spacing: 0) {
                         VStack(alignment: .leading, spacing: 0) {
@@ -178,8 +186,8 @@ struct onboarding: View {
                         Spacer()
                     }
                     .padding(.horizontal, 24)
-                    
-                } else if currentPage == 3 {
+                    .tag(2)
+
                     // --- الصفحة الرابعة والأخيرة ---
                     VStack(spacing: 0) {
                         Spacer()
@@ -205,48 +213,25 @@ struct onboarding: View {
                         
                         Spacer()
                     }
+                    .tag(3)
                 }
-            }
-            
-            // الجزء السفلي الثابت: مؤشرات النقاط وزر التنقل أو البدء
-            ZStack {
-                // مؤشرات النقاط (الكبسولة المتحركة)
-                HStack(spacing: 6) {
-                    ForEach(0..<4, id: \.self) { index in
-                        if currentPage == index {
+                .tabViewStyle(.page(indexDisplayMode: .never))
+
+                // الجزء السفلي: مؤشرات النقاط وزر Start Journaling
+                VStack(spacing: 20) {
+                    HStack(spacing: 8) {
+                        ForEach(0..<pagesCount, id: \.self) { i in
                             Capsule()
-                                .fill(Color("primarycolor").opacity(0.7))
-                                .frame(width: 24, height: 8)
-                        } else {
-                            Circle()
-                                .fill(Color.gray.opacity(0.3))
-                                .frame(width: 8, height: 8)
+                                .fill(i == page ? Color("primarycolor") : Color("primarycolor").opacity(0.25))
+                                .frame(width: i == page ? 24 : 8, height: 8)
                         }
                     }
-                }
-                
-                // أزرار التحكم بالسفل
-                HStack {
-                    Spacer()
-                    
-                    if currentPage < 3 {
-                        // زر السهم للانتقال للخطوة التالية في نفس الصفحة
-                        Button {
-                            withAnimation {
-                                currentPage += 1
-                            }
-                        } label: {
-                            Image(systemName: "arrow.forward")
-                                .font(.system(size: 24, weight: .medium))
-                                .foregroundStyle(.white.opacity(0.60))
-                                .frame(width: 56, height: 56)
-                                .background(Color("primarycolor"))
-                                .clipShape(Circle())
-                        }
-                    } else {
-                        // زر Start journaling باللون البنفسجي والستايل القديم
+                    .frame(maxWidth: .infinity, alignment: .center)
+                    .animation(.easeInOut, value: page)
+
+                    if page == 3 {
                         Button(action: {
-                            print("start journaling clicked")
+                            showHome = true // الانتقال للهوم عند الضغط على Start journaling
                         }) {
                             Text("Start journaling")
                                 .font(.system(size: 20, weight: .semibold))
@@ -256,17 +241,24 @@ struct onboarding: View {
                                 .background(Color("primarycolor"))
                                 .clipShape(Capsule())
                         }
+                        .transition(.opacity.combined(with: .move(edge: .bottom)))
                     }
                 }
+                .padding(.horizontal, 24)
+                .padding(.bottom, 20)
             }
-            .padding(.horizontal, 24)
-            .padding(.bottom, 20)
+            .padding(.vertical)
         }
-        .padding(.vertical)
+        // هذا الجزء هو المسؤول عن فتح واجهة الهوم عندما تصبح showHome = true
+        .fullScreenCover(isPresented: $showHome) {
+            CalendarHomeScreen()
+        
+        }
     }
 }
 
 // معاينة الواجهة
 #Preview {
     onboarding()
+   
 }
