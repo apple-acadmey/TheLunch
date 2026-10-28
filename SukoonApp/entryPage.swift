@@ -59,6 +59,10 @@ struct ReflectionPageView: View {
         existingEntry?.date ?? date ?? entryDate
     }
 
+    private var isTextEmpty: Bool {
+        userReflectionText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+    }
+
     // MARK: - Go Home
 
     private func goHome() {
@@ -139,7 +143,7 @@ struct ReflectionPageView: View {
             // Two-Line Date Header
             Text(formattedCurrentDate)
                 .font(.subheadline)
-                .foregroundColor(.secondary)
+                .foregroundColor(Color("datescolortxt"))
                 .lineSpacing(4)
                 .padding(.horizontal, 24)
 
@@ -158,22 +162,22 @@ struct ReflectionPageView: View {
             Text(currentQuestion)
                 .font(.title3)
                 .fontWeight(.semibold)
-                .foregroundColor(.primary)
+                .foregroundColor(Color("titleText"))
                 .padding(.horizontal, 24)
 
             // User Reflection Text Box
             ZStack(alignment: .topLeading) {
                 RoundedRectangle(cornerRadius: 16)
-                    .fill(Color(.systemBackground))
+                    .fill(Color("entrybox"))
                     .shadow(color: Color.black.opacity(0.04), radius: 8, x: 0, y: 4)
                     .overlay(
                         RoundedRectangle(cornerRadius: 16)
-                            .stroke(Color(.systemGray5), lineWidth: 1)
+                            .stroke(Color("primarycolor").opacity(0.25), lineWidth: 1)
                     )
 
                 if userReflectionText.isEmpty {
                     Text("Write your reflection here...")
-                        .foregroundColor(Color(.placeholderText))
+                        .foregroundColor(Color("titleText").opacity(0.4))
                         .padding(.horizontal, 20)
                         .padding(.vertical, 20)
                 }
@@ -181,6 +185,7 @@ struct ReflectionPageView: View {
                 TextEditor(text: $userReflectionText)
                     .scrollContentBackground(.hidden)
                     .background(Color.clear)
+                    .foregroundColor(Color("titleText"))
                     .padding(12)
                     .focused($isFocused)
             }
@@ -189,6 +194,7 @@ struct ReflectionPageView: View {
 
             Spacer()
         }
+        .background(Color("background").ignoresSafeArea())
         .onAppear {
             if let entry = existingEntry {
                 if currentQuestion.isEmpty { currentQuestion = entry.question }
@@ -207,6 +213,7 @@ struct ReflectionPageView: View {
                     dismiss()
                 } label: {
                     Image(systemName: "chevron.left")
+                        .foregroundStyle(Color("titleText"))
                 }
             }
 
@@ -228,15 +235,15 @@ struct ReflectionPageView: View {
                         )
                     }
 
-                    // الحذف: يمسح كل البيانات ويرجع للصفحة الرئيسية
+                    // الحذف: الأيقونة والنص أحمر
                     Button(role: .destructive) {
                         discardEntry()
                     } label: {
                         Label("Delete", systemImage: "trash")
                     }
-                    .tint(.red)
                 } label: {
                     Image(systemName: "ellipsis")
+                        .foregroundStyle(Color("titleText"))
                 }
             }
 
@@ -246,11 +253,11 @@ struct ReflectionPageView: View {
                     saveEntry()
                 } label: {
                     Image(systemName: "checkmark")
+                        .foregroundStyle(isTextEmpty ? Color("titleText").opacity(0.3) : Color("titleText"))
                 }
-                .disabled(userReflectionText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+                .disabled(isTextEmpty)
             }
         }
-        .tint(.black)
     }
 }
 
