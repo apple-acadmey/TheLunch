@@ -378,4 +378,4 @@ extension View {
 #Preview {
     CalendarHomeScreen()
         .modelContainer(for: JournalEntryData.self, inMemory: true)
-}ے
+}
