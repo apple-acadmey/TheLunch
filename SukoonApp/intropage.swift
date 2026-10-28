@@ -7,28 +7,6 @@ struct OnboardingItem {
     let subtitle: String
 }
 
-// 2. كلاس الألوان الخاص بالصفحة الثالثة
-private func i3Hex(_ hex: String) -> Color {
-    let s = hex.trimmingCharacters(in: CharacterSet.alphanumerics.inverted)
-    var v: UInt64 = 0
-    Scanner(string: s).scanHexInt64(&v)
-    return Color(
-        red: Double((v >> 16) & 0xFF) / 255,
-        green: Double((v >> 8) & 0xFF) / 255,
-        blue: Double(v & 0xFF) / 255
-    )
-}
-
-private enum I3 {
-    static let ink = i3Hex("#16131F")
-    static let accent = i3Hex("#7C4AB2")
-    static let chipBG = i3Hex("#E4DCFB")
-    static let chipText = i3Hex("#5B46C4")
-    static let muted = i3Hex("#3A3744")
-    static let gray = i3Hex("#6B6B73")
-    static let shadow = i3Hex("#5B2BB8")
-}
-
 private struct I3Card: View {
     var body: some View {
         ZStack(alignment: .bottomLeading) {
@@ -36,14 +14,14 @@ private struct I3Card: View {
                 Text("TEMPORARY")
                     .font(.system(size: 12, weight: .semibold))
                     .tracking(0.5)
-                    .foregroundColor(I3.chipText)
+                    .foregroundColor(Color("primarycolor"))
                     .padding(.horizontal, 10)
                     .padding(.vertical, 5)
-                    .background(Capsule().fill(I3.chipBG))
+                    .background(Capsule().fill(Color("primarycolor").opacity(0.2)))
 
                 Text("I just need to get this out of my chest, no one will ever read it…")
                     .font(.system(size: 16, weight: .semibold))
-                    .foregroundColor(I3.ink)
+                    .foregroundColor(Color("titleText"))
                     .lineSpacing(2)
                     .fixedSize(horizontal: false, vertical: true)
             }
@@ -53,8 +31,8 @@ private struct I3Card: View {
             .frame(maxWidth: .infinity, alignment: .leading)
             .background(
                 RoundedRectangle(cornerRadius: 28, style: .continuous)
-                    .fill(Color.white)
-                    .shadow(color: I3.shadow.opacity(0.16), radius: 18, x: 0, y: 10)
+                    .fill(Color("entrybox"))
+                    .shadow(color: Color("primarycolor").opacity(0.16), radius: 18, x: 0, y: 10)
             )
 
             Image("Image1")
@@ -74,7 +52,7 @@ struct onboarding: View {
 
     var body: some View {
         ZStack {
-            Color(.systemBackground).ignoresSafeArea()
+            Color("background").ignoresSafeArea()
 
             VStack(alignment: .leading, spacing: 0) {
                 
@@ -85,9 +63,9 @@ struct onboarding: View {
                         Button(action: {
                             showHome = true // الانتقال للهوم عند الضغط على skip
                         }) {
-                            Text("skip")
+                            Text("Skip")
                                 .font(.subheadline)
-                                .foregroundColor(.gray)
+                                .foregroundColor(Color("titleText").opacity(0.6))
                         }
                     }
                 }
@@ -109,12 +87,12 @@ struct onboarding: View {
                         Text("Every feeling Deserve a page")
                             .font(.system(size: 32, weight: .bold))
                             .multilineTextAlignment(.center)
-                            .foregroundColor(.black)
+                            .foregroundColor(Color("titleText"))
                             .padding(.horizontal, 30)
 
                         Text("Meet the gang, they will help you write about however you feel today.")
                             .font(.body)
-                            .foregroundColor(.gray)
+                            .foregroundColor(Color("titleText").opacity(0.6))
                             .multilineTextAlignment(.center)
                             .padding(.horizontal, 20)
                         Spacer()
@@ -125,7 +103,7 @@ struct onboarding: View {
                     VStack(alignment: .leading, spacing: 0) {
                         Text("How are you feeling?")
                             .font(.system(size: 28, weight: .bold))
-                            .foregroundColor(.black)
+                            .foregroundColor(Color("titleText"))
                             .padding(.horizontal, 24)
                             .padding(.top, 20)
 
@@ -139,7 +117,7 @@ struct onboarding: View {
                             Image("prmptbox")
                                 .resizable()
                                 .scaledToFit()
-                                .shadow(color: Color(red: 91/255, green: 43/255, blue: 184/255).opacity(0.16),
+                                .shadow(color: Color("primarycolor").opacity(0.16),
                                         radius: 18, x: 0, y: 10)
 
                             VStack(alignment: .leading, spacing: 6) {
@@ -149,7 +127,7 @@ struct onboarding: View {
 
                                 Text("What is weighing on your heart today?")
                                     .font(.system(size: 20, weight: .bold))
-                                    .foregroundColor(.black)
+                                    .foregroundColor(Color("titleText"))
                                     .lineSpacing(3)
                             }
                             .padding(.horizontal, 28)
@@ -166,9 +144,9 @@ struct onboarding: View {
                     VStack(alignment: .leading, spacing: 0) {
                         VStack(alignment: .leading, spacing: 0) {
                             Text("Write freely.")
-                                .foregroundColor(I3.ink)
+                                .foregroundColor(Color("titleText"))
                             Text("It won't stay.")
-                                .foregroundColor(I3.accent)
+                                .foregroundColor(Color("primarycolor"))
                         }
                         .font(.system(size: 32, weight: .bold))
                         .padding(.top, 30)
@@ -179,7 +157,7 @@ struct onboarding: View {
 
                         Text("Start a temporary journal to say anything. It deletes itself automatically, no trace left.")
                             .font(.system(size: 15))
-                            .foregroundColor(I3.gray)
+                            .foregroundColor(Color("titleText").opacity(0.6))
                             .lineSpacing(2)
                             .padding(.top, 50)
 
@@ -200,13 +178,13 @@ struct onboarding: View {
                             Text("Your safe little space is ready")
                                 .font(.system(size: 28, weight: .bold))
                                 .multilineTextAlignment(.center)
-                                .foregroundColor(.black)
+                                .foregroundColor(Color("titleText"))
                                 .padding(.horizontal, 24)
 
                             Text("Check in daily, track your mood, and be gentle to yourself")
                                 .font(.body)
                                 .multilineTextAlignment(.center)
-                                .foregroundColor(.gray)
+                                .foregroundColor(Color("titleText").opacity(0.6))
                                 .padding(.horizontal, 24)
                         }
                         .padding(.top, 25)

@@ -5,7 +5,7 @@ import SwiftData
 struct Sukoon: App {//بنعدل عليه باسم تطبيقنا
     var body: some Scene {
         WindowGroup {
-            CalendarHomeScreen()
+            onboarding()
         }
         .modelContainer(for: JournalEntryData.self)
     }
