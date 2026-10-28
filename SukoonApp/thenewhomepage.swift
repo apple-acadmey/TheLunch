@@ -234,6 +234,7 @@ struct CalendarHomeView: View {
         dayToDelete = nil
     }
 
+    // الضغط العادي = تحديد، الضغط المطوّل = حذف فقط (بدون فيفرت)
     private func cell(_ date: Date) -> some View {
         let isSelected = selected == date
         return Button { tap(date) } label: {
@@ -241,24 +242,18 @@ struct CalendarHomeView: View {
                 .aspectRatio(1, contentMode: .fit)
                 .overlay(cellContent(date, isSelected: isSelected))
         }
-        .buttonStyle(.plain)
-        .contextMenu {
-            if let entry = entryByDay[date] {
-                Button {
-                    entry.isFavourite.toggle()
-                    try? context.save()
-                } label: {
-                    Label(entry.isFavourite ? "Remove from favorites" : "Add to favorites",
-                          systemImage: entry.isFavourite ? "star.slash" : "star")
-                }
-                Button(role: .destructive) {
-                    dayToDelete = date
-                } label: {
-                    Label("Delete", systemImage: "trash")
+                .buttonStyle(.plain)
+                .contextMenu {
+                    // أيقونة تراش حمراء فقط
+                    if entryByDay[date] != nil {
+                        Button(role: .destructive) {
+                            dayToDelete = date
+                        } label: {
+                            Label("Delete", systemImage: "trash")
+                        }
+                    }
                 }
             }
-        }
-    }
 
     @ViewBuilder
     private func cellContent(_ date: Date, isSelected: Bool) -> some View {
@@ -266,7 +261,7 @@ struct CalendarHomeView: View {
             Image(entry.mood.imageName)
                 .resizable()
                 .scaledToFit()
-                .outline(color: Color("bordercal"), width: isSelected ? 3 : 0)   // ← bordercal
+                .outline(color: Color("bordercal"), width: isSelected ? 3 : 0)
         } else if cal.isDateInToday(date) {
             ZStack {
                 Circle().fill(Color("primarycolor"))
@@ -278,7 +273,7 @@ struct CalendarHomeView: View {
                 Circle().fill(Color("dayCircle"))
                 Text("\(cal.component(.day, from: date))")
                     .font(.system(size: 26))
-                    .foregroundColor(Color("datescolortxt"))
+                    .foregroundColor(Color("datescolorcel"))   // ← اللون الجديد
             }
             .overlay(selectionRing(isSelected))
         }
@@ -288,7 +283,7 @@ struct CalendarHomeView: View {
     private func selectionRing(_ isSelected: Bool) -> some View {
         if isSelected {
             Circle()
-                .stroke(Color("bordercal"), lineWidth: 3)   // ← bordercal
+                .stroke(Color("bordercal"), lineWidth: 3)
                 .padding(-3)
         }
     }
@@ -300,12 +295,16 @@ struct CalFavoritesPage: View {
     @Environment(\.modelContext) private var context
     private let cal = Calendar.current
 
+    @State private var selectedEntry: JournalEntryData?
+    @State private var entryToEdit: JournalEntryData?
+    @State private var entryToDelete: JournalEntryData?
     @Query(
         filter: #Predicate<JournalEntryData> { $0.isFavourite == true },
         sort: \JournalEntryData.date
     )
     private var favourites: [JournalEntryData]
 
+    // مفضلة الشهر المعروض فقط
     private var shown: [JournalEntryData] {
         favourites.filter {
             cal.isDate($0.date, equalTo: month, toGranularity: .month)
@@ -313,31 +312,48 @@ struct CalFavoritesPage: View {
     }
 
     var body: some View {
-        CalPage(month: $month, onPlus: { }) {
+        CalPage(month: $month,
+                plusIcon: "pencil",
+                onPlus: {
+                    if let entry = selectedEntry { entryToEdit = entry }
+                },
+                plusDisabled: selectedEntry == nil) {
             ForEach(shown) { entry in
-                let isSelected = cal.isDateInToday(entry.date)
+                let isSelected = selectedEntry == entry
 
-                Color.clear
-                    .aspectRatio(1, contentMode: .fit)
-                    .overlay(
-                        Image(entry.mood.imageName)
-                            .resizable()
-                            .scaledToFit()
-                            .outline(color: Color("bordercal"),   // ← bordercal
-                                     width: isSelected ? 3 : 0)
-                            .padding(4)
-                    )
-                    .contentShape(Rectangle())
-                    .contextMenu {
-                        Button(role: .destructive) {
-                            entry.isFavourite = false
-                            try? context.save()
-                        } label: {
-                            Label("Remove from favorites", systemImage: "star.slash")
-                        }
+                Button {
+                    selectedEntry = entry
+                } label: {
+                    Color.clear
+                        .aspectRatio(1, contentMode: .fit)
+                        .overlay(
+                            Image(entry.mood.imageName)
+                                .resizable()
+                                .scaledToFit()
+                                .outline(color: Color("bordercal"),
+                                         width: isSelected ? 3 : 0)
+                                .padding(4)
+                        )
+                        .contentShape(Rectangle())
+                }
+                .buttonStyle(.plain)
+                .contextMenu {
+                    Button {
+                        if selectedEntry == entry { selectedEntry = nil }
+                        entry.isFavourite = false
+                        try? context.save()
+                    } label: {
+                        Label("Remove from favorites", systemImage: "star.slash")
                     }
+
+                }
             }
         }
+        .navigationDestination(item: $entryToEdit) { entry in
+            ReflectionPageView(selectedMood: entry.mood, existingEntry: entry)
+                .environment(\.closeFlow, { entryToEdit = nil })
+        }
+        .onChange(of: month) { selectedEntry = nil }
     }
 }
 
