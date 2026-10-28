@@ -264,7 +264,7 @@ struct ReflectionPageView: View {
 // MARK: - Preview
 #Preview {
     NavigationStack {
-        ReflectionPageView(selectedMood: .good)
+        ReflectionPageView(selectedMood: .good,date: Date())
     }
     .modelContainer(for: JournalEntryData.self, inMemory: true)
 }

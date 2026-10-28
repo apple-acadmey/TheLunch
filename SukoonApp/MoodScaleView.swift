@@ -124,11 +124,10 @@ struct MoodScaleView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Color("background").ignoresSafeArea())
         .navigationDestination(isPresented: $goToTemporaryPage) {
-            TemporaryView(selectedMood: selectedMood, selectedDate: date)
+            TemporaryView(selectedMood: selectedMood, selectedDate: date).environment(\.closeFlow,closeFlow)
         }
         .navigationDestination(isPresented: $goToJournalPage) {
-            ReflectionPageView(selectedMood: selectedMood)
-        }
+            ReflectionPageView(selectedMood: selectedMood,date:date).environment(\.closeFlow,closeFlow)        }
     } // body
 }
 
