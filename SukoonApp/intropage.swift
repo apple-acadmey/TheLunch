@@ -46,6 +46,7 @@ private struct I3Card: View {
 
 // 3. الواجهة الرئيسية
 struct onboarding: View {
+    @Binding var HasSeenOnbording : Bool
     @State private var page = 0
     @State private var showHome = false // متغير لتفعيل الانتقال للهوم
     let pagesCount = 4
@@ -61,7 +62,7 @@ struct onboarding: View {
                     Spacer()
                     if page < 3 {
                         Button(action: {
-                            showHome = true // الانتقال للهوم عند الضغط على skip
+                            HasSeenOnbording = true // الانتقال للهوم عند الضغط على skip
                         }) {
                             Text("Skip")
                                 .font(.subheadline)
@@ -209,7 +210,7 @@ struct onboarding: View {
 
                     if page == 3 {
                         Button(action: {
-                            showHome = true // الانتقال للهوم عند الضغط على Start journaling
+                            HasSeenOnbording = true// الانتقال للهوم عند الضغط على Start journaling
                         }) {
                             Text("Start journaling")
                                 .font(.system(size: 20, weight: .semibold))
@@ -237,6 +238,5 @@ struct onboarding: View {
 
 // معاينة الواجهة
 #Preview {
-    onboarding()
-   
+    onboarding(HasSeenOnbording: .constant(false))
 }

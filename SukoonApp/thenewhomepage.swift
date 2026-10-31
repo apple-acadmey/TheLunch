@@ -50,6 +50,7 @@ struct CalHeader: View {
 
     var body: some View {
         VStack(spacing: 2) {
+            
             Text(month.formatted(.dateTime.year()))
                 .font(.system(size: 18, weight: .medium))
             HStack(spacing: 40) {
