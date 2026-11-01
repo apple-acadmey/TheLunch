@@ -138,124 +138,126 @@ struct ReflectionPageView: View {
     // MARK: - Body
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 20) {
-
-            // Two-Line Date Header
-            Text(formattedCurrentDate)
-                .font(.subheadline)
-                .foregroundColor(Color("datescolortxt"))
-                .lineSpacing(4)
-                .padding(.horizontal, 24)
-
-            // Mood Asset Image selected by user
-            HStack {
-                Spacer()
-                Image(selectedMood.imageName)
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 90, height: 90)
-                Spacer()
-            }
-            .padding(.vertical, 8)
-
-            // Question for Selected Mood
-            Text(currentQuestion)
-                .font(.title3)
-                .fontWeight(.semibold)
-                .foregroundColor(Color("titleText"))
-                .padding(.horizontal, 24)
-
-            // User Reflection Text Box
-            ZStack(alignment: .topLeading) {
-                RoundedRectangle(cornerRadius: 16)
-                    .fill(Color("entrybox"))
-                    .shadow(color: Color.black.opacity(0.04), radius: 8, x: 0, y: 4)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 16)
-                            .stroke(Color("primarycolor").opacity(0.25), lineWidth: 1)
-                    )
-
-                if userReflectionText.isEmpty {
-                    Text("Write your reflection here...")
-                        .foregroundColor(Color("titleText").opacity(0.4))
-                        .padding(.horizontal, 20)
-                        .padding(.vertical, 20)
+        ScrollView{
+            VStack(alignment: .leading, spacing: 20) {
+                
+                // Two-Line Date Header
+                Text(formattedCurrentDate)
+                    .font(.subheadline)
+                    .foregroundColor(Color("datescolortxt"))
+                    .lineSpacing(4)
+                    .padding(.horizontal, 24)
+                
+                // Mood Asset Image selected by user
+                HStack {
+                    Spacer()
+                    Image(selectedMood.imageName)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 90, height: 90)
+                    Spacer()
                 }
-
-                TextEditor(text: $userReflectionText)
-                    .scrollContentBackground(.hidden)
-                    .background(Color.clear)
+                .padding(.vertical, 8)
+                
+                // Question for Selected Mood
+                Text(currentQuestion)
+                    .font(.title3)
+                    .fontWeight(.semibold)
                     .foregroundColor(Color("titleText"))
-                    .padding(12)
-                    .focused($isFocused)
-            }
-            .frame(minHeight: 250)
-            .padding(.horizontal, 24)
-
-            Spacer()
-        }
-        .background(Color("background").ignoresSafeArea())
-        .onAppear {
-            if let entry = existingEntry {
-                if currentQuestion.isEmpty { currentQuestion = entry.question }
-                if userReflectionText.isEmpty { userReflectionText = entry.text }
-                isFavourite = entry.isFavourite
-            } else if currentQuestion.isEmpty {
-                currentQuestion = QuestionProvider.question(for: selectedMood)
-            }
-        }
-        .navigationBarBackButtonHidden(true)
-        .navigationBarTitleDisplayMode(.inline)
-        .toolbar {
-            // الرجوع (خطوة وحدة للخلف)
-            ToolbarItem(placement: .navigationBarLeading) {
-                Button {
-                    dismiss()
-                } label: {
-                    Image(systemName: "chevron.left")
-                        .foregroundStyle(Color("titleText"))
-                }
-            }
-
-            // الثلاث نقاط
-            ToolbarItem(placement: .navigationBarTrailing) {
-                Menu {
-                    Button {
-                        currentQuestion = QuestionProvider.reroll(for: selectedMood, excluding: currentQuestion)
-                    } label: {
-                        Label("Another question", systemImage: "arrow.triangle.2.circlepath")
-                    }
-
-                    Button {
-                        isFavourite.toggle()
-                    } label: {
-                        Label(
-                            isFavourite ? "Remove favourite" : "Add favourite",
-                            systemImage: isFavourite ? "star.fill" : "star"
+                    .padding(.horizontal, 24)
+                
+                // User Reflection Text Box
+                ZStack(alignment: .topLeading) {
+                    RoundedRectangle(cornerRadius: 16)
+                        .fill(Color("entrybox"))
+                        .shadow(color: Color.black.opacity(0.04), radius: 8, x: 0, y: 4)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 16)
+                                .stroke(Color("primarycolor").opacity(0.25), lineWidth: 1)
                         )
+                    
+                    if userReflectionText.isEmpty {
+                        Text("Write your reflection here...")
+                            .foregroundColor(Color("titleText").opacity(0.4))
+                            .padding(.horizontal, 20)
+                            .padding(.vertical, 20)
                     }
-
-                    // الحذف: الأيقونة والنص أحمر
-                    Button(role: .destructive) {
-                        discardEntry()
-                    } label: {
-                        Label("Delete", systemImage: "trash")
-                    }
-                } label: {
-                    Image(systemName: "ellipsis")
-                        .foregroundStyle(Color("titleText"))
+                    
+                    TextEditor(text: $userReflectionText)
+                        .scrollContentBackground(.hidden)
+                        .background(Color.clear)
+                        .foregroundColor(Color("titleText"))
+                        .padding(12)
+                        .focused($isFocused)
+                }
+                .frame(minHeight: 450)
+                .padding(.horizontal, 24)
+                
+                Spacer()
+            }
+            .background(Color("background").ignoresSafeArea())
+            .onAppear {
+                if let entry = existingEntry {
+                    if currentQuestion.isEmpty { currentQuestion = entry.question }
+                    if userReflectionText.isEmpty { userReflectionText = entry.text }
+                    isFavourite = entry.isFavourite
+                } else if currentQuestion.isEmpty {
+                    currentQuestion = QuestionProvider.question(for: selectedMood)
                 }
             }
-
-            // الصح
-            ToolbarItem(placement: .navigationBarTrailing) {
-                Button {
-                    saveEntry()
-                } label: {
-                    Image(systemName: "checkmark")
-                        .foregroundStyle(isTextEmpty ? Color("titleText").opacity(0.3) : Color("titleText"))
+            .navigationBarBackButtonHidden(true)
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                // الرجوع (خطوة وحدة للخلف)
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button {
+                        dismiss()
+                    } label: {
+                        Image(systemName: "chevron.left")
+                            .foregroundStyle(Color("titleText"))
+                    }
                 }
-                .disabled(isTextEmpty)
+                
+                // الثلاث نقاط
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Menu {
+                        Button {
+                            currentQuestion = QuestionProvider.reroll(for: selectedMood, excluding: currentQuestion)
+                        } label: {
+                            Label("Another question", systemImage: "arrow.triangle.2.circlepath")
+                        }
+                        
+                        Button {
+                            isFavourite.toggle()
+                        } label: {
+                            Label(
+                                isFavourite ? "Remove favourite" : "Add favourite",
+                                systemImage: isFavourite ? "star.fill" : "star"
+                            )
+                        }
+                        
+                        // الحذف: الأيقونة والنص أحمر
+                        Button(role: .destructive) {
+                            discardEntry()
+                        } label: {
+                            Label("Delete", systemImage: "trash")
+                        }
+                    } label: {
+                        Image(systemName: "ellipsis")
+                            .foregroundStyle(Color("titleText"))
+                    }
+                }
+                
+                // الصح
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button {
+                        saveEntry()
+                    } label: {
+                        Image(systemName: "checkmark")
+                            .foregroundStyle(isTextEmpty ? Color("titleText").opacity(0.3) : Color("titleText"))
+                    }
+                    .disabled(isTextEmpty)
+                }
             }
         }
     }
