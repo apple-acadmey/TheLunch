@@ -57,131 +57,137 @@ struct TemporaryView: View {
     }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 16) {
-
-            Text(formattedCurrentDate)
-                .font(.subheadline)
-                .foregroundColor(Color("datescolortxt"))
-                .lineSpacing(4)
+        ScrollView{
+            VStack(alignment: .leading, spacing: 16) {
+                
+                //Text(formattedCurrentDate).font(.subheadline).foregroundColor(Color("datescolortxt")).lineSpacing(4).padding(.horizontal, 24)
+                
+                HStack {
+                    Spacer()
+                    Image(selectedMood.imageName)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 90, height: 90)
+                    Spacer()
+                }
+                .padding(.vertical, 8)
+                
+                Divider()
+                    .frame(width: 370)
+                    .frame(maxWidth: .infinity, alignment: .center)
+                    .padding(.top, 5)
+                
+                VStack(alignment: .leading, spacing: 8) {
+                    Text(currentQuestion)
+                        .font(.title3)
+                        .fontWeight(.semibold)
+                        .foregroundColor(Color("titleText"))
+                    
+                    Text("Temporary")
+                        .font(.system(size: 12, weight: .medium))
+                        .foregroundStyle(Color("primarycolor"))
+                        .padding(.horizontal, 10)
+                        .padding(.vertical, 4)
+                        .background(Color("primarycolor").opacity(0.30))
+                        .clipShape(RoundedRectangle(cornerRadius: 6))
+                }
                 .padding(.horizontal, 24)
-
-            HStack {
-                Spacer()
-                Image(selectedMood.imageName)
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 90, height: 90)
-                Spacer()
-            }
-            .padding(.vertical, 8)
-
-            Divider()
-                .frame(width: 370)
-                .frame(maxWidth: .infinity, alignment: .center)
                 .padding(.top, 5)
-
-            VStack(alignment: .leading, spacing: 8) {
-                Text(currentQuestion)
-                    .font(.title3)
-                    .fontWeight(.semibold)
-                    .foregroundColor(Color("titleText"))
-
-                Text("Temporary")
-                    .font(.system(size: 12, weight: .medium))
-                    .foregroundStyle(Color("primarycolor"))
-                    .padding(.horizontal, 10)
-                    .padding(.vertical, 4)
-                    .background(Color("primarycolor").opacity(0.30))
-                    .clipShape(RoundedRectangle(cornerRadius: 6))
-            }
-            .padding(.horizontal, 24)
-            .padding(.top, 5)
-            .onAppear {
-                if currentQuestion.isEmpty {
-                    currentQuestion = QuestionProvider.question(for: selectedMood)
-                }
-            }
-
-            ZStack(alignment: .topLeading) {
-                RoundedRectangle(cornerRadius: 16)
-                    .fill(Color("entrybox"))
-                    .shadow(color: Color.black.opacity(0.04), radius: 8, x: 0, y: 4)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 16)
-                            .stroke(style: StrokeStyle(lineWidth: 1, dash: [5]))
-                            .foregroundStyle(Color("primarycolor").opacity(0.4))
-                    )
-
-                if journalText.isEmpty {
-                    Text("Write your reflection here...")
-                        .foregroundColor(Color("titleText").opacity(0.4))
-                        .padding(.horizontal, 20)
-                        .padding(.vertical, 20)
-                }
-
-                TextEditor(text: $journalText)
-                    .scrollContentBackground(.hidden)
-                    .background(Color.clear)
-                    .foregroundColor(Color("titleText"))
-                    .padding(12)
-            }
-            .frame(minHeight: 250)
-            .padding(.horizontal, 24)
-            .padding(.bottom, 20)
-
-            Spacer()
-        }
-        .background(Color("background").ignoresSafeArea())
-        .navigationBarBackButtonHidden(true)
-        .navigationBarTitleDisplayMode(.inline)
-        .toolbar {
-            ToolbarItem(placement: .navigationBarLeading) {
-                Button {
-                    dismiss()
-                } label: {
-                    Image(systemName: "chevron.left")
-                        .foregroundStyle(Color("titleText"))
-                }
-            }
-
-            ToolbarItem(placement: .navigationBarTrailing) {
-                Menu {
-                    Button {
-                        currentQuestion = QuestionProvider.reroll(for: selectedMood, excluding: currentQuestion)
-                    } label: {
-                        Label("Another question", systemImage: "arrow.triangle.2.circlepath")
+                .onAppear {
+                    if currentQuestion.isEmpty {
+                        currentQuestion = QuestionProvider.question(for: selectedMood)
                     }
-
-                    Button {
-                        isFavourite.toggle()
-                    } label: {
-                        Label(
-                            isFavourite ? "Remove favourite" : "Add favourite",
-                            systemImage: isFavourite ? "star.fill" : "star"
+                }
+                
+                ZStack(alignment: .topLeading) {
+                    RoundedRectangle(cornerRadius: 16)
+                        .fill(Color("entrybox"))
+                        .shadow(color: Color.black.opacity(0.04), radius: 8, x: 0, y: 4)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 16)
+                                .stroke(style: StrokeStyle(lineWidth: 1, dash: [5]))
+                                .foregroundStyle(Color("primarycolor").opacity(0.4))
                         )
+                    
+                    if journalText.isEmpty {
+                        Text("Write your reflection here...")
+                            .foregroundColor(Color("titleText").opacity(0.4))
+                            .padding(.horizontal, 20)
+                            .padding(.vertical, 20)
                     }
-                    .disabled(true)
-
-                    Button(role: .destructive) {
-                        journalText = ""
-                        goHome()
+                    
+                    TextEditor(text: $journalText)
+                        .scrollContentBackground(.hidden)
+                        .background(Color.clear)
+                        .foregroundColor(Color("titleText"))
+                        .padding(12)
+                }
+                .frame(minHeight: 450)
+                .padding(.horizontal, 24)
+                .padding(.bottom, 20)
+                
+                Spacer()
+            }.safeAreaInset(edge: .top, alignment: .leading, spacing: 0) {
+                Text(formattedCurrentDate)
+                    .font(.subheadline)
+                    .foregroundColor(Color("datescolortxt"))
+                    .lineSpacing(4)
+                    .padding(.horizontal, 24)
+                    .padding(.vertical, 8)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                .background(Color("background"))}
+            .background(Color("background").ignoresSafeArea())
+            .navigationBarBackButtonHidden(true)
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button {
+                        dismiss()
                     } label: {
-                        Label("Delete", systemImage: "trash")
+                        Image(systemName: "chevron.left")
+                            .foregroundStyle(Color("titleText"))
                     }
-                } label: {
-                    Image(systemName: "ellipsis")
-                        .foregroundStyle(Color("titleText"))
                 }
-            }
-
-            ToolbarItem(placement: .navigationBarTrailing) {
-                Button {
-                    saveTemporary()
-                } label: {
-                    Image(systemName: "checkmark")
-                        .foregroundStyle(isTextEmpty ? Color("titleText").opacity(0.3) : Color("titleText"))
+                
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Menu {
+                        Button {
+                            currentQuestion = QuestionProvider.reroll(for: selectedMood, excluding: currentQuestion)
+                        } label: {
+                            Label("Another question", systemImage: "arrow.triangle.2.circlepath")
+                        }
+                        
+                        Button {
+                            isFavourite.toggle()
+                        } label: {
+                            Label(
+                                isFavourite ? "Remove favourite" : "Add favourite",
+                                systemImage: isFavourite ? "star.fill" : "star"
+                            )
+                        }
+                        .disabled(true)
+                        
+                        Button(role: .destructive) {
+                            journalText = ""
+                            goHome()
+                        } label: {
+                            Label("Delete", systemImage: "trash")
+                        }
+                    } label: {
+                        Image(systemName: "ellipsis")
+                            .foregroundStyle(Color("titleText"))
+                    }
                 }
-                .disabled(isTextEmpty)
+                
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button {
+                        saveTemporary()
+                    } label: {
+                        Image(systemName: "checkmark")
+                            .foregroundStyle(isTextEmpty ? Color("titleText").opacity(0.3) : Color("titleText"))
+                    }
+                    .disabled(isTextEmpty)
+                }
             }
         }
     }
